@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace PTTT
 {
     public class DieFaceGenerator : MonoBehaviour
@@ -9,6 +13,8 @@ namespace PTTT
         public MeshFilter Filter;
         public GameObject FacePrefab;
 
+
+#if UNITY_EDITOR
         [ContextMenu("Place Faces")]
         public void PlaceFaces()
         {
@@ -23,8 +29,12 @@ namespace PTTT
                 var normal = Vector3.Cross(p2 - p1, p3 - p1).normalized;
                 var offsetCenter = center + (normal * 0.001f);
 
-                Instantiate(FacePrefab, offsetCenter, Quaternion.LookRotation(-normal, (p1 - center).normalized), transform);
+                var instantiated = (GameObject)PrefabUtility.InstantiatePrefab(FacePrefab);
+                instantiated.transform.parent = transform;
+                instantiated.transform.position = offsetCenter;
+                instantiated.transform.rotation = Quaternion.LookRotation(-normal, (p1 - center).normalized);
             }
         }
+#endif
     }
 }

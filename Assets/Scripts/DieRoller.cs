@@ -10,7 +10,17 @@ namespace PTTT
         public float MaxVel;
         public float MaxAngVel;
 
-        private void OnMouseDown()
+        private int tmpTick;
+
+        private void FixedUpdate()
+        {
+            tmpTick = (tmpTick + 1) % 360;
+            if (tmpTick == 0)
+            {
+                Roll();
+            }
+        }
+        private void Roll()
         {
             RB.velocity = new Vector3(
                 Random.Range(-MaxVel, MaxVel), 0, Random.Range(-MaxVel, MaxVel));
