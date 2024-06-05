@@ -12,17 +12,16 @@ namespace PTTT
         public float GoodChance;
         public float BadChance;
 
-        public SpriteRenderer ContentsRenderer;
-
-        public TMPro.TMP_Text GoodText;
-        public TMPro.TMP_Text BadText;
-        public TMPro.TMP_Text NeutralText;
+        public StatBar GoodBar;
+        public StatBar NeutralBar;
+        public StatBar BadBar;
+        public TMPro.TMP_Text PlacedText;
 
         public void UpdateChanceText()
         {
-            GoodText.text = (GoodChance * 100).ToString("0.#");
-            BadText.text = (BadChance * 100).ToString("0.#");
-            NeutralText.text = ((1 - (GoodChance + BadChance)) * 100).ToString("0.#");
+            GoodBar.UpdateProbability(GoodChance);
+            BadBar.UpdateProbability(BadChance);
+            NeutralBar.UpdateProbability(1 - (GoodChance + BadChance));
         }
 
         public void OnMouseDown()
@@ -47,12 +46,13 @@ namespace PTTT
 
         private void HandlePlayerChange(bool playerIsX)
         {
-            ContentsRenderer.sprite = Manager.SpriteForPlayer(playerIsX);
+            PlacedText.text = playerIsX ? "X" : "O";
+            PlacedText.gameObject.SetActive(true);
             CurrentContents = playerIsX ? SquareContents.X : SquareContents.O;
 
-            GoodText.gameObject.SetActive(false);
-            BadText.gameObject.SetActive(false);
-            NeutralText.gameObject.SetActive(false);
+            GoodBar.gameObject.SetActive(false);
+            BadBar.gameObject.SetActive(false);
+            NeutralBar.gameObject.SetActive(false);
         }
     }
 }

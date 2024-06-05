@@ -9,17 +9,6 @@ namespace PTTT
         public List<GameSquare> Squares;
         public bool CurrentlyX;
 
-        public SpriteRenderer TurnIndicator;
-        public Sprite XSprite;
-        public Sprite OSprite;
-
-        public Sprite CurrentPlayerSprite => SpriteForPlayer(CurrentlyX);
-
-        public Sprite SpriteForPlayer(bool playerX)
-        {
-            return playerX ? XSprite : OSprite;
-        }
-
         private void Start()
         {
             SetCurrentPlayer(true);
@@ -36,7 +25,6 @@ namespace PTTT
         internal void SetCurrentPlayer(bool playerX)
         {
             CurrentlyX = playerX;
-            TurnIndicator.sprite = CurrentPlayerSprite;
         }
     }
 }
