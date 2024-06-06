@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace PTTT
 {
@@ -8,13 +9,21 @@ namespace PTTT
     {
         public TMPro.TMP_Text PlayerText;
         public TMPro.TMP_Text ProbabilityText;
-        public RectTransform Slider;
+        public Image Slider;
 
         public float SliderMaxWidth;
 
+        public void UpdateColor(Color color)
+        {
+            PlayerText.color = color;
+            ProbabilityText.color = color;
+            Slider.color = color;
+        }
+
         public void UpdateProbability(float chance)
         {
-            Slider.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, chance * SliderMaxWidth);
+            // Take into account that max possible chance is only 90%
+            Slider.rectTransform.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, (chance / 0.9f) * SliderMaxWidth);
             ProbabilityText.text = (chance * 100).ToString("0") + "%";
         }
 

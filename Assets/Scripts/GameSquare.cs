@@ -1,10 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
 namespace PTTT
 {
-    public class GameSquare : MonoBehaviour
+    public class GameSquare : MonoBehaviour,
+        IPointerClickHandler,
+        IPointerEnterHandler,
+        IPointerExitHandler
     {
         public GameManager Manager;
 
@@ -12,6 +17,12 @@ namespace PTTT
         public float GoodChance;
         public float BadChance;
 
+        public Color StatUnselectedColor;
+        public Color StatSelectedColor;
+        public Color BackgroundUnselectedColor;
+        public Color BackgroundSelectedColor;
+
+        public Image Background;
         public StatBar GoodBar;
         public StatBar NeutralBar;
         public StatBar BadBar;
@@ -53,6 +64,27 @@ namespace PTTT
             GoodBar.gameObject.SetActive(false);
             BadBar.gameObject.SetActive(false);
             NeutralBar.gameObject.SetActive(false);
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            Debug.Log("Click");
+        }
+
+        public void OnPointerEnter(PointerEventData eventData)
+        {
+            GoodBar.UpdateColor(StatSelectedColor);
+            BadBar.UpdateColor(StatSelectedColor);
+            NeutralBar.UpdateColor(StatSelectedColor);
+            Background.color = BackgroundSelectedColor;
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            GoodBar.UpdateColor(StatUnselectedColor);
+            BadBar.UpdateColor(StatUnselectedColor);
+            NeutralBar.UpdateColor(StatUnselectedColor);
+            Background.color = BackgroundUnselectedColor;
         }
     }
 }
