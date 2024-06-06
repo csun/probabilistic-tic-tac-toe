@@ -100,6 +100,7 @@ MonoBehaviour:
   HighlightColor: {r: 1, g: 0.9803922, b: 0.9450981, a: 1}
   BaseColor: {r: 0.3539961, g: 0.376958, b: 0.4056604, a: 1}
   UpThreshold: 0.95
+  RollStopTimeLimit: 1
   RB: {fileID: 7886033338011058695}
   MaxVel: 10
   MaxAngVel: 3000

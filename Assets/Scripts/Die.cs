@@ -17,12 +17,16 @@ namespace PTTT
         public Color HighlightColor;
         public Color BaseColor;
         public float UpThreshold;
+        public float RollStopTimeLimit;
 
         public Rigidbody RB;
         public float MaxVel;
         public float MaxAngVel;
 
         private int[] shuffleIndices;
+
+        private TMPro.TMP_Text currentUpFace;
+        private float faceUpDuration;
 
         private void Start()
         {
@@ -35,17 +39,29 @@ namespace PTTT
 
         private void Update()
         {
+            TMPro.TMP_Text foundUpFace = null;
             foreach (var text in FaceTexts)
             {
                 var isUp = Vector3.Dot((text.gameObject.transform.position - transform.position).normalized, Vector3.up) >= UpThreshold;
                 if (isUp)
                 {
                     text.color = HighlightColor;
+                    foundUpFace = text;
                 }
                 else
                 {
                     text.color = BaseColor;
                 }
+            }
+
+            if (foundUpFace == currentUpFace)
+            {
+                faceUpDuration += Time.deltaTime;
+            }
+            else
+            {
+                currentUpFace = foundUpFace;
+                faceUpDuration = 0;
             }
         }
 
@@ -79,16 +95,29 @@ namespace PTTT
 
         public IEnumerator Roll(System.Action<SquareContents> finished)
         {
+            currentUpFace = null;
+            faceUpDuration = 0;
+
             RB.velocity = new Vector3(
                 Random.Range(-MaxVel, MaxVel), 0, Random.Range(-MaxVel, MaxVel));
             RB.angularVelocity = new Vector3(
                 Random.Range(-MaxAngVel, MaxAngVel),
                 Random.Range(-MaxAngVel, MaxAngVel),
                 Random.Range(-MaxAngVel, MaxAngVel));
-            
-            yield return new WaitForSeconds(1f);
 
-            finished(SquareContents.X);
+            while (faceUpDuration < RollStopTimeLimit)
+            {
+                yield return null;
+            }
+
+            if (currentUpFace is null)
+            {
+                StartCoroutine(Roll(finished));
+            }
+            else
+            {
+                finished(SquareContentsHelper.FromString(currentUpFace.text));
+            }
         }
 
 #if UNITY_EDITOR
