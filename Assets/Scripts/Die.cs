@@ -8,7 +8,7 @@ using UnityEditor;
 
 namespace PTTT
 {
-    public class DieFaceGenerator : MonoBehaviour
+    public class Die : MonoBehaviour
     {
         public MeshFilter Filter;
         public GameObject FacePrefab;
@@ -17,6 +17,10 @@ namespace PTTT
         public Color HighlightColor;
         public Color BaseColor;
         public float UpThreshold;
+
+        public Rigidbody RB;
+        public float MaxVel;
+        public float MaxAngVel;
 
         private int[] shuffleIndices;
 
@@ -27,8 +31,6 @@ namespace PTTT
             {
                 shuffleIndices[i] = i;
             }
-
-            AssignFaces(5, 7);
         }
 
         private void Update()
@@ -73,6 +75,20 @@ namespace PTTT
                     FaceTexts[shuffleIndices[i]].text = "";
                 }
             }
+        }
+
+        public IEnumerator Roll(System.Action<SquareContents> finished)
+        {
+            RB.velocity = new Vector3(
+                Random.Range(-MaxVel, MaxVel), 0, Random.Range(-MaxVel, MaxVel));
+            RB.angularVelocity = new Vector3(
+                Random.Range(-MaxAngVel, MaxAngVel),
+                Random.Range(-MaxAngVel, MaxAngVel),
+                Random.Range(-MaxAngVel, MaxAngVel));
+            
+            yield return new WaitForSeconds(1f);
+
+            finished(SquareContents.X);
         }
 
 #if UNITY_EDITOR

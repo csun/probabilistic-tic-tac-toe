@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1649899353696322606}
   - component: {fileID: 7886033338011058695}
-  - component: {fileID: 7076030847772811153}
+  - component: {fileID: 9078112016080294118}
   m_Layer: 0
   m_Name: Die
   m_TagString: Untagged
@@ -62,7 +62,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!114 &7076030847772811153
+--- !u!114 &9078112016080294118
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -71,12 +71,38 @@ MonoBehaviour:
   m_GameObject: {fileID: 5523857024123766814}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bee1d011f5bd6b449850cf8fd9851a1d, type: 3}
+  m_Script: {fileID: 11500000, guid: 0eb8b3a91e2d8754fbe2244f513fd6ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Filter: {fileID: 4991900215071741856}
+  FacePrefab: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+  FaceTexts:
+  - {fileID: 7838289289153187265}
+  - {fileID: 1860304925764686581}
+  - {fileID: 4693477847971381137}
+  - {fileID: 179557297981688057}
+  - {fileID: 2804815590214287398}
+  - {fileID: 4660118961033529433}
+  - {fileID: 7742110697557902884}
+  - {fileID: 327011805032236}
+  - {fileID: 6501254025551801227}
+  - {fileID: 8456664807029647554}
+  - {fileID: 8802262767375219370}
+  - {fileID: 2583949828040683268}
+  - {fileID: 1116311344860286822}
+  - {fileID: 6424405167522321120}
+  - {fileID: 4424255882781900475}
+  - {fileID: 7402512510791043947}
+  - {fileID: 9181484507929475462}
+  - {fileID: 873779599675680520}
+  - {fileID: 7283238985647475663}
+  - {fileID: 3314102173590812617}
+  HighlightColor: {r: 1, g: 0.9803922, b: 0.9450981, a: 1}
+  BaseColor: {r: 0.3539961, g: 0.376958, b: 0.4056604, a: 1}
+  UpThreshold: 0.95
   RB: {fileID: 7886033338011058695}
-  MaxVel: 5
-  MaxAngVel: 1000
+  MaxVel: 10
+  MaxAngVel: 3000
 --- !u!1 &6132316669232712330
 GameObject:
   m_ObjectHideFlags: 0
@@ -86,7 +112,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8077828936047367013}
-  - component: {fileID: 7532253927084173407}
   m_Layer: 0
   m_Name: Sides
   m_TagString: Untagged
@@ -129,44 +154,6 @@ Transform:
   - {fileID: 2734268288293742496}
   m_Father: {fileID: 1649899353696322606}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7532253927084173407
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6132316669232712330}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0eb8b3a91e2d8754fbe2244f513fd6ee, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Filter: {fileID: 4991900215071741856}
-  FacePrefab: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
-  FaceTexts:
-  - {fileID: 7838289289153187265}
-  - {fileID: 1860304925764686581}
-  - {fileID: 4693477847971381137}
-  - {fileID: 179557297981688057}
-  - {fileID: 2804815590214287398}
-  - {fileID: 4660118961033529433}
-  - {fileID: 7742110697557902884}
-  - {fileID: 327011805032236}
-  - {fileID: 6501254025551801227}
-  - {fileID: 8456664807029647554}
-  - {fileID: 8802262767375219370}
-  - {fileID: 2583949828040683268}
-  - {fileID: 1116311344860286822}
-  - {fileID: 6424405167522321120}
-  - {fileID: 4424255882781900475}
-  - {fileID: 7402512510791043947}
-  - {fileID: 9181484507929475462}
-  - {fileID: 873779599675680520}
-  - {fileID: 7283238985647475663}
-  - {fileID: 3314102173590812617}
-  HighlightColor: {r: 1, g: 0.9803922, b: 0.9450981, a: 1}
-  BaseColor: {r: 0.3539961, g: 0.376958, b: 0.4056604, a: 1}
-  UpThreshold: 0.95
 --- !u!1001 &325764226892765041
 PrefabInstance:
   m_ObjectHideFlags: 0

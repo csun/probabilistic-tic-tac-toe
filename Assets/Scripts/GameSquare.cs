@@ -14,8 +14,8 @@ namespace PTTT
         public GameManager Manager;
 
         public SquareContents CurrentContents;
-        public float GoodChance;
-        public float BadChance;
+        public int GoodChances;
+        public int BadChances;
 
         public Color StatUnselectedColor;
         public Color StatSelectedColor;
@@ -28,51 +28,46 @@ namespace PTTT
         public StatBar BadBar;
         public TMPro.TMP_Text PlacedText;
 
-        public void UpdateChanceText()
+        public void Reset()
         {
-            GoodBar.UpdateProbability(GoodChance);
-            BadBar.UpdateProbability(BadChance);
-            NeutralBar.UpdateProbability(1 - (GoodChance + BadChance));
+            CurrentContents = SquareContents.Empty;
+            GoodBar.gameObject.SetActive(true);
+            BadBar.gameObject.SetActive(true);
+            NeutralBar.gameObject.SetActive(true);
+            Background.gameObject.SetActive(true);
+            PlacedText.gameObject.SetActive(false);
+
+            GoodBar.UpdateProbability(GoodChances / 20.0f);
+            BadBar.UpdateProbability(BadChances / 20.0f);
+            NeutralBar.UpdateProbability(1 - ((GoodChances + BadChances) / 20.0f));
         }
-
-        public void OnMouseDown()
+        public void HandlePlacement(bool placedX)
         {
-            if (CurrentContents != SquareContents.Empty)
-            {
-                return;
-            }
-
-            var rand = Random.value;
-            if (rand <= GoodChance)
-            {
-                HandlePlayerChange(Manager.CurrentlyX);
-            }
-            else if (1 - rand <= BadChance)
-            {
-                HandlePlayerChange(!Manager.CurrentlyX);
-            }
-
-            Manager.SetCurrentPlayer(!Manager.CurrentlyX);
-        }
-
-        private void HandlePlayerChange(bool playerIsX)
-        {
-            PlacedText.text = playerIsX ? "X" : "O";
+            PlacedText.text = placedX ? "X" : "O";
             PlacedText.gameObject.SetActive(true);
-            CurrentContents = playerIsX ? SquareContents.X : SquareContents.O;
+            CurrentContents = placedX ? SquareContents.X : SquareContents.O;
 
             GoodBar.gameObject.SetActive(false);
             BadBar.gameObject.SetActive(false);
             NeutralBar.gameObject.SetActive(false);
+            Background.gameObject.SetActive(false);
+        }
+
+        public void HandlePlayerChange(bool playerIsX)
+        {
+            GoodBar.PlayerText.text = playerIsX ? "X" : "O";
+            BadBar.PlayerText.text = playerIsX ? "O" : "X";
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            Debug.Log("Click");
+            if (CurrentContents != SquareContents.Empty || Manager.CurrentState != GameManager.State.Selecting) { return; }
+            Manager.OnSquareSelect(this);
         }
 
         public void OnPointerEnter(PointerEventData eventData)
         {
+            if (CurrentContents != SquareContents.Empty || Manager.CurrentState != GameManager.State.Selecting) { return; }
             GoodBar.UpdateColor(StatSelectedColor);
             BadBar.UpdateColor(StatSelectedColor);
             NeutralBar.UpdateColor(StatSelectedColor);
@@ -81,6 +76,7 @@ namespace PTTT
 
         public void OnPointerExit(PointerEventData eventData)
         {
+            if (CurrentContents != SquareContents.Empty || Manager.CurrentState != GameManager.State.Selecting) { return; }
             GoodBar.UpdateColor(StatUnselectedColor);
             BadBar.UpdateColor(StatUnselectedColor);
             NeutralBar.UpdateColor(StatUnselectedColor);
