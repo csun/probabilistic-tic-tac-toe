@@ -6,10 +6,8 @@ using UnityEngine.UI;
 
 namespace PTTT
 {
-    public class GameSquare : MonoBehaviour,
-        IPointerClickHandler,
-        IPointerEnterHandler,
-        IPointerExitHandler
+    public class GameSquare : MouseHighlightable,
+        IPointerClickHandler
     {
         public GameManager Manager;
 
@@ -34,6 +32,9 @@ namespace PTTT
         public StatBar NeutralBar;
         public StatBar BadBar;
         public TMPro.TMP_Text PlacedText;
+
+        protected override bool canChangeHighlightState => Manager.CurrentState == GameManager.State.Selecting;
+        protected override bool ignoreMouseHighlights => CurrentContents != SquareContents.Empty;
 
         public void Reset()
         {
@@ -76,8 +77,13 @@ namespace PTTT
             yield return new WaitForSeconds(FirstBlinksOffTime);
             Highlight();
             yield return new WaitForSeconds(FinalBlinkHoldTime);
-            UnHighlight();
             onPlacementComplete();
+
+            if (CurrentContents != SquareContents.Empty)
+            {
+                ChangeDesiredHighlightState(false);
+            }
+            ForceUpdateHighlight();
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -86,19 +92,7 @@ namespace PTTT
             Manager.OnSquareSelect(this);
         }
 
-        public void OnPointerEnter(PointerEventData eventData)
-        {
-            if (CurrentContents != SquareContents.Empty || Manager.CurrentState != GameManager.State.Selecting) { return; }
-            Highlight();
-        }
-
-        public void OnPointerExit(PointerEventData eventData)
-        {
-            if (CurrentContents != SquareContents.Empty || Manager.CurrentState != GameManager.State.Selecting) { return; }
-            UnHighlight();
-        }
-
-        private void Highlight()
+        protected override void Highlight()
         {
             GoodBar.UpdateColor(StatSelectedColor);
             BadBar.UpdateColor(StatSelectedColor);
@@ -107,7 +101,7 @@ namespace PTTT
             Background.color = BackgroundSelectedColor;
         }
 
-        private void UnHighlight()
+        protected override void UnHighlight()
         {
             GoodBar.UpdateColor(StatUnselectedColor);
             BadBar.UpdateColor(StatUnselectedColor);

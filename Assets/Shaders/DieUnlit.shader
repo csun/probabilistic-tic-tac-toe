@@ -1,6 +1,6 @@
 // Modified from https://www.ronja-tutorials.com/post/020-hull-outline/
 
-Shader "Custom/DieOutline"
+Shader "Custom/DieUnlit"
 {
     Properties{
         _Color ("Base Color", Color) = (0, 0, 0, 1)
