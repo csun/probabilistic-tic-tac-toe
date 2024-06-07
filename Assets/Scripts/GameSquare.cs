@@ -14,6 +14,7 @@ namespace PTTT
         public SquareContents CurrentContents;
         public int GoodChances;
         public int BadChances;
+        public int NeutralChances => 20 - (GoodChances + BadChances);
 
         public Color StatUnselectedColor;
         public Color StatSelectedColor;
@@ -40,7 +41,7 @@ namespace PTTT
 
             GoodBar.UpdateProbability(GoodChances / 20.0f);
             BadBar.UpdateProbability(BadChances / 20.0f);
-            NeutralBar.UpdateProbability(1 - ((GoodChances + BadChances) / 20.0f));
+            NeutralBar.UpdateProbability(NeutralChances / 20.0f);
         }
         public void HandlePlacement(SquareContents contents, System.Action onPlacementComplete)
         {

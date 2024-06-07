@@ -42,12 +42,15 @@ namespace PTTT
 
             analyzer = new(Squares);
 
-            SetPlayerMode(false);
+            SetPlayerMode(true);
         }
 
         public void SetPlayerMode(bool singleplayer)
         {
             IsSingleplayer = singleplayer;
+
+            OScore.HeaderText.text = singleplayer ? "CPU - O" : "Player - O";
+
             xStartNextGame = true;
             ResetScore();
             ResetBoard();
@@ -64,8 +67,6 @@ namespace PTTT
         private void ResetBoard()
         {
             CurrentState = State.Selecting;
-            SetCurrentPlayer(xStartNextGame);
-            xStartNextGame = !xStartNextGame;
 
             foreach(var square in Squares)
             {
@@ -77,6 +78,11 @@ namespace PTTT
 
                 square.Reset();
             }
+
+            analyzer.Reset();
+
+            SetCurrentPlayer(xStartNextGame);
+            xStartNextGame = !xStartNextGame;
         }
 
         public void OnSquareSelect(GameSquare selected)
@@ -84,6 +90,7 @@ namespace PTTT
             CurrentState = State.Rolling;
             selectedSquare = selected;
 
+            selectedSquare.Highlight();
             Die.AssignFaces(selected.GoodChances, selected.BadChances);
 
             StartCoroutine(Die.Roll(CurrentlyX, OnRollComplete));
@@ -103,18 +110,18 @@ namespace PTTT
 
         private void OnPlacementComplete()
         {
-            var winstate = analyzer.GetWinState();
+            var winstate = analyzer.GetWinState(selectedSquare);
 
             ScoreIndicator winner;
             switch (winstate)
             {
-                case BoardAnalyzer.WinState.XWin:
+                case WinState.XWin:
                     winner = XScore;
                     break;
-                case BoardAnalyzer.WinState.OWin:
+                case WinState.OWin:
                     winner = OScore;
                     break;
-                case BoardAnalyzer.WinState.Stalemate:
+                case WinState.Stalemate:
                     winner = TieScore;
                     break;
                 default:
@@ -125,8 +132,8 @@ namespace PTTT
             if (winner is null)
             {
                 CurrentState = State.Selecting;
-                SetCurrentPlayer(!CurrentlyX);
                 foreach (var square in Squares) { square.Refresh(); }
+                SetCurrentPlayer(!CurrentlyX);
             }
             else
             {
@@ -153,6 +160,17 @@ namespace PTTT
             (CurrentlyX ? XScore : OScore).Highlight();
             (CurrentlyX ? OScore : XScore).UnHighlight();
             TieScore.UnHighlight();
+
+            if (!CurrentlyX && IsSingleplayer)
+            {
+                DoCPUMove();
+            }
+        }
+
+        void DoCPUMove()
+        {
+            foreach (var square in Squares) { square.UnHighlight(); }
+            OnSquareSelect(analyzer.BestMoveForO());
         }
     }
 }
