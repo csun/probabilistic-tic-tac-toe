@@ -14,19 +14,30 @@ namespace PTTT
         public GameObject FacePrefab;
         public List<TMPro.TMP_Text> FaceTexts;
 
+        public Collider EntryWall;
+        public Transform SpawnPoint;
+
         public Color HighlightColor;
         public Color BaseColor;
         public float UpThreshold;
         public float RollStopTimeLimit;
 
         public Rigidbody RB;
+        public float MinVel;
         public float MaxVel;
-        public float MaxAngVel;
+        public float RandomSpread;
+        public Vector3 MinAngVel;
+        public Vector3 MaxAngVel;
+
+        public float TotalRetractionDuration;
+        public AnimationCurve RetractionCurve;
 
         private int[] shuffleIndices;
 
         private TMPro.TMP_Text currentUpFace;
         private float faceUpDuration;
+        private Vector3 retractionStart;
+        private float retractionDuration;
 
         private void Start()
         {
@@ -93,17 +104,39 @@ namespace PTTT
             }
         }
 
+        public IEnumerator Retract(System.Action finished)
+        {
+            RB.isKinematic = true;
+            retractionDuration = 0;
+            retractionStart = transform.position;
+
+            while (retractionDuration < TotalRetractionDuration)
+            {
+                var amt = RetractionCurve.Evaluate(retractionDuration / TotalRetractionDuration);
+                transform.position = ((SpawnPoint.position - retractionStart) * amt) + retractionStart;
+                yield return null;
+                retractionDuration += Time.deltaTime;
+            }
+
+            finished();
+        }
+
         public IEnumerator Roll(System.Action<SquareContents> finished)
         {
+            RB.isKinematic = false;
+
             currentUpFace = null;
             faceUpDuration = 0;
 
-            RB.velocity = new Vector3(
-                Random.Range(-MaxVel, MaxVel), 0, Random.Range(-MaxVel, MaxVel));
+            EntryWall.isTrigger = true;
+            RB.position = SpawnPoint.position;
+
+            var forward = Quaternion.AngleAxis(Random.Range(-RandomSpread, RandomSpread), SpawnPoint.up) * SpawnPoint.forward;
+            RB.velocity = forward * Random.Range(MinVel, MaxVel);
             RB.angularVelocity = new Vector3(
-                Random.Range(-MaxAngVel, MaxAngVel),
-                Random.Range(-MaxAngVel, MaxAngVel),
-                Random.Range(-MaxAngVel, MaxAngVel));
+                Random.Range(MinAngVel.x, MaxAngVel.x),
+                Random.Range(MinAngVel.y, MaxAngVel.y),
+                Random.Range(MinAngVel.z, MaxAngVel.z));
 
             while (faceUpDuration < RollStopTimeLimit)
             {
@@ -118,6 +151,11 @@ namespace PTTT
             {
                 finished(SquareContentsHelper.FromString(currentUpFace.text));
             }
+        }
+
+        private void OnTriggerExit(Collider other)
+        {
+            EntryWall.isTrigger = false;
         }
 
 #if UNITY_EDITOR

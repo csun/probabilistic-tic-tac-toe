@@ -58,7 +58,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -97,13 +97,18 @@ MonoBehaviour:
   - {fileID: 873779599675680520}
   - {fileID: 7283238985647475663}
   - {fileID: 3314102173590812617}
+  EntryWall: {fileID: 0}
+  SpawnPoint: {fileID: 0}
   HighlightColor: {r: 1, g: 0.9803922, b: 0.9450981, a: 1}
-  BaseColor: {r: 0.3539961, g: 0.376958, b: 0.4056604, a: 1}
+  BaseColor: {r: 0.20358671, g: 0.21971789, b: 0.23584908, a: 1}
   UpThreshold: 0.95
-  RollStopTimeLimit: 1
+  RollStopTimeLimit: 1.5
   RB: {fileID: 7886033338011058695}
-  MaxVel: 10
-  MaxAngVel: 3000
+  MinVel: 4
+  MaxVel: 7
+  RandomSpread: 30
+  MinAngVel: {x: 360, y: -3000, z: -3000}
+  MaxAngVel: {x: 3000, y: 3000, z: 3000}
 --- !u!1 &6132316669232712330
 GameObject:
   m_ObjectHideFlags: 0

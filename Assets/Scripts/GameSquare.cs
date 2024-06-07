@@ -57,6 +57,7 @@ namespace PTTT
         {
             GoodBar.PlayerText.text = playerIsX ? "X" : "O";
             BadBar.PlayerText.text = playerIsX ? "O" : "X";
+            UnHighlight();
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -68,15 +69,25 @@ namespace PTTT
         public void OnPointerEnter(PointerEventData eventData)
         {
             if (CurrentContents != SquareContents.Empty || Manager.CurrentState != GameManager.State.Selecting) { return; }
+            Highlight();
+        }
+
+        public void OnPointerExit(PointerEventData eventData)
+        {
+            if (CurrentContents != SquareContents.Empty || Manager.CurrentState != GameManager.State.Selecting) { return; }
+            UnHighlight();
+        }
+
+        private void Highlight()
+        {
             GoodBar.UpdateColor(StatSelectedColor);
             BadBar.UpdateColor(StatSelectedColor);
             NeutralBar.UpdateColor(StatSelectedColor);
             Background.color = BackgroundSelectedColor;
         }
 
-        public void OnPointerExit(PointerEventData eventData)
+        private void UnHighlight()
         {
-            if (CurrentContents != SquareContents.Empty || Manager.CurrentState != GameManager.State.Selecting) { return; }
             GoodBar.UpdateColor(StatUnselectedColor);
             BadBar.UpdateColor(StatUnselectedColor);
             NeutralBar.UpdateColor(StatUnselectedColor);

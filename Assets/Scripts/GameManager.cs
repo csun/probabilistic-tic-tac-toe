@@ -15,7 +15,9 @@ namespace PTTT
 
         public Die Die;
         public List<GameSquare> Squares;
-        public bool CurrentlyX;
+        public int MaxNeutralChances;
+        public int MinGoodChances;
+        public bool CurrentlyX { get; private set; }
         public State CurrentState { get; private set; } = State.Selecting;
 
         private bool xStartNextGame = true;
@@ -40,8 +42,9 @@ namespace PTTT
             {
                 square.Manager = this;
 
-                square.GoodChances = Random.Range(1, 19);  // Int overload from [1, 18]
-                square.BadChances = Random.Range(1, 19 - square.GoodChances);  // Should guarantee at least 1/20 chance of neither good or bad
+                var neutralChances = Random.Range(1, MaxNeutralChances + 1);  // Note that this is using the int overload of random range
+                square.GoodChances = Random.Range(MinGoodChances, 20 - neutralChances);  // Ensure that there's at least 1 bad chance
+                square.BadChances = 20 - (square.GoodChances + neutralChances);
 
                 square.Reset();
             }
@@ -67,6 +70,12 @@ namespace PTTT
             }
             SetCurrentPlayer(!CurrentlyX);
 
+            CurrentState = State.Placing;
+            StartCoroutine(Die.Retract(OnPlaceComplete));
+        }
+
+        private void OnPlaceComplete()
+        {
             CurrentState = State.Selecting;
         }
 
