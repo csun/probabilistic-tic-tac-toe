@@ -20,6 +20,10 @@ namespace PTTT
         public bool CurrentlyX { get; private set; }
         public State CurrentState { get; private set; } = State.Selecting;
 
+        public ScoreIndicator XScore;
+        public ScoreIndicator TieScore;
+        public ScoreIndicator OScore;
+
         private bool xStartNextGame = true;
         private GameSquare selectedSquare;
         private SquareContents lastRollResult;
@@ -65,15 +69,15 @@ namespace PTTT
         {
             CurrentState = State.Retracting;
             lastRollResult = result;
-            StartCoroutine(Die.Retract(OnWinningFaceShown, OnRetractComplete));
+            StartCoroutine(Die.Retract(OnWinningFaceShown));
         }
 
         private void OnWinningFaceShown()
         {
-            selectedSquare.HandlePlacement(lastRollResult);
+            selectedSquare.HandlePlacement(lastRollResult, OnPlacementComplete);
         }
 
-        private void OnRetractComplete()
+        private void OnPlacementComplete()
         {
             CurrentState = State.Selecting;
             SetCurrentPlayer(!CurrentlyX);
@@ -82,11 +86,8 @@ namespace PTTT
         void SetCurrentPlayer(bool playerX)
         {
             CurrentlyX = playerX;
-            
-            foreach(var square in Squares)
-            {
-                square.HandlePlayerChange(CurrentlyX);
-            }
+            (CurrentlyX ? XScore : OScore).Highlight();
+            (CurrentlyX ? OScore : XScore).UnHighlight();
         }
     }
 }

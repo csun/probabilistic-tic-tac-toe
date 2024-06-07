@@ -47,7 +47,7 @@ namespace PTTT
             BadBar.UpdateProbability(BadChances / 20.0f);
             NeutralBar.UpdateProbability(1 - ((GoodChances + BadChances) / 20.0f));
         }
-        public void HandlePlacement(SquareContents contents)
+        public void HandlePlacement(SquareContents contents, System.Action onPlacementComplete)
         {
             if (contents != SquareContents.Empty)
             {
@@ -60,10 +60,10 @@ namespace PTTT
                 NeutralBar.gameObject.SetActive(false);
             }
 
-            StartCoroutine(Blink());
+            StartCoroutine(Blink(onPlacementComplete));
         }
 
-        private IEnumerator Blink()
+        private IEnumerator Blink(System.Action onPlacementComplete)
         {
             for (var i = 0; i < TotalBlinks - 1; i++)
             {
@@ -77,10 +77,7 @@ namespace PTTT
             Highlight();
             yield return new WaitForSeconds(FinalBlinkHoldTime);
             UnHighlight();
-        }
-
-        public void HandlePlayerChange(bool playerIsX)
-        {
+            onPlacementComplete();
         }
 
         public void OnPointerClick(PointerEventData eventData)

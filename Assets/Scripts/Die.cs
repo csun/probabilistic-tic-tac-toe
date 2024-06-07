@@ -119,7 +119,7 @@ namespace PTTT
             }
         }
 
-        public IEnumerator Retract(System.Action holdFinished, System.Action finished)
+        public IEnumerator Retract(System.Action holdFinished)
         {
             RB.isKinematic = true;
 
@@ -127,8 +127,6 @@ namespace PTTT
             yield return new WaitForSeconds(ShowFaceHoldTime);
             holdFinished();
             yield return MoveOffscreen();
-
-            finished();
         }
 
         private IEnumerator ShowWinningFace()
