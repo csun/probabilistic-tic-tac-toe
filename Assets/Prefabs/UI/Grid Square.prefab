@@ -29,8 +29,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1390464691893584367}
   - {fileID: 8996741543975121930}
+  - {fileID: 1390464691893584367}
   - {fileID: 6939944309905341730}
   - {fileID: 8973210954558801829}
   - {fileID: 1548877483351022041}
@@ -57,10 +57,16 @@ MonoBehaviour:
   CurrentContents: 0
   GoodChances: 0
   BadChances: 0
+  TotalBlinks: 3
+  FirstBlinksOnTime: 0.1
+  FirstBlinksOffTime: 0.1
+  FinalBlinkHoldTime: 1
   StatUnselectedColor: {r: 0.5882353, g: 0.62352943, b: 0.65882355, a: 1}
   StatSelectedColor: {r: 1, g: 0.9803922, b: 0.9450981, a: 1}
   BackgroundUnselectedColor: {r: 0, g: 0, b: 0, a: 0}
   BackgroundSelectedColor: {r: 0.16470589, g: 0.19607845, b: 0.20784315, a: 1}
+  ContentsUnselectedColor: {r: 0.16470589, g: 0.19607845, b: 0.20784315, a: 1}
+  ContentsSelectedColor: {r: 1, g: 0.9803922, b: 0.9450981, a: 1}
   Background: {fileID: 3072492203114630299}
   GoodBar: {fileID: 586061931833978508}
   NeutralBar: {fileID: 1507159405197415435}
@@ -321,7 +327,7 @@ PrefabInstance:
     - target: {fileID: 6334446601685146110, guid: 56174f4ce6a61f34e91f793ad214f582, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 5222559850382746119, guid: 6e1cfa3a4e69bd24fbae4716dce15c32, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 6334446601685146110, guid: 56174f4ce6a61f34e91f793ad214f582, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -470,7 +476,7 @@ PrefabInstance:
     - target: {fileID: 6334446601685146110, guid: 56174f4ce6a61f34e91f793ad214f582, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 5222559850382746119, guid: 6e1cfa3a4e69bd24fbae4716dce15c32, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 6334446601685146110, guid: 56174f4ce6a61f34e91f793ad214f582, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0
@@ -623,7 +629,7 @@ PrefabInstance:
     - target: {fileID: 6334446601685146110, guid: 56174f4ce6a61f34e91f793ad214f582, type: 3}
       propertyPath: m_sharedMaterial
       value: 
-      objectReference: {fileID: 5222559850382746119, guid: 6e1cfa3a4e69bd24fbae4716dce15c32, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 6334446601685146110, guid: 56174f4ce6a61f34e91f793ad214f582, type: 3}
       propertyPath: m_hasFontAssetChanged
       value: 0

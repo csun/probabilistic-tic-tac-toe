@@ -17,10 +17,17 @@ namespace PTTT
         public int GoodChances;
         public int BadChances;
 
+        public int TotalBlinks;
+        public float FirstBlinksOnTime;
+        public float FirstBlinksOffTime;
+        public float FinalBlinkHoldTime;
+
         public Color StatUnselectedColor;
         public Color StatSelectedColor;
         public Color BackgroundUnselectedColor;
         public Color BackgroundSelectedColor;
+        public Color ContentsUnselectedColor;
+        public Color ContentsSelectedColor;
 
         public Image Background;
         public StatBar GoodBar;
@@ -34,28 +41,46 @@ namespace PTTT
             GoodBar.gameObject.SetActive(true);
             BadBar.gameObject.SetActive(true);
             NeutralBar.gameObject.SetActive(true);
-            Background.gameObject.SetActive(true);
             PlacedText.gameObject.SetActive(false);
 
             GoodBar.UpdateProbability(GoodChances / 20.0f);
             BadBar.UpdateProbability(BadChances / 20.0f);
             NeutralBar.UpdateProbability(1 - ((GoodChances + BadChances) / 20.0f));
         }
-        public void HandlePlacement(bool placedX)
+        public void HandlePlacement(SquareContents contents)
         {
-            PlacedText.text = placedX ? "X" : "O";
-            PlacedText.gameObject.SetActive(true);
-            CurrentContents = placedX ? SquareContents.X : SquareContents.O;
+            if (contents != SquareContents.Empty)
+            {
+                PlacedText.text = contents == SquareContents.X ? "X" : "O";
+                PlacedText.gameObject.SetActive(true);
+                CurrentContents = contents;
 
-            GoodBar.gameObject.SetActive(false);
-            BadBar.gameObject.SetActive(false);
-            NeutralBar.gameObject.SetActive(false);
-            Background.gameObject.SetActive(false);
+                GoodBar.gameObject.SetActive(false);
+                BadBar.gameObject.SetActive(false);
+                NeutralBar.gameObject.SetActive(false);
+            }
+
+            StartCoroutine(Blink());
+        }
+
+        private IEnumerator Blink()
+        {
+            for (var i = 0; i < TotalBlinks - 1; i++)
+            {
+                UnHighlight();
+                yield return new WaitForSeconds(FirstBlinksOffTime);
+                Highlight();
+                yield return new WaitForSeconds(FirstBlinksOnTime);
+            }
+            UnHighlight();
+            yield return new WaitForSeconds(FirstBlinksOffTime);
+            Highlight();
+            yield return new WaitForSeconds(FinalBlinkHoldTime);
+            UnHighlight();
         }
 
         public void HandlePlayerChange(bool playerIsX)
         {
-            UnHighlight();
         }
 
         public void OnPointerClick(PointerEventData eventData)
@@ -81,6 +106,7 @@ namespace PTTT
             GoodBar.UpdateColor(StatSelectedColor);
             BadBar.UpdateColor(StatSelectedColor);
             NeutralBar.UpdateColor(StatSelectedColor);
+            PlacedText.color = ContentsSelectedColor;
             Background.color = BackgroundSelectedColor;
         }
 
@@ -89,6 +115,7 @@ namespace PTTT
             GoodBar.UpdateColor(StatUnselectedColor);
             BadBar.UpdateColor(StatUnselectedColor);
             NeutralBar.UpdateColor(StatUnselectedColor);
+            PlacedText.color = ContentsUnselectedColor;
             Background.color = BackgroundUnselectedColor;
         }
     }

@@ -10,12 +10,17 @@ namespace PTTT
 {
     public class Die : MonoBehaviour
     {
+        const string GOOD_FACE_STRING = "A";
+        const string NEUTRAL_FACE_STRING = "B";
+        const string BAD_FACE_STRING = "C";
+
         public MeshFilter Filter;
         public GameObject FacePrefab;
         public List<TMPro.TMP_Text> FaceTexts;
 
         public Collider EntryWall;
         public Transform SpawnPoint;
+        public Transform ShowFacePoint;
 
         public Color HighlightColor;
         public Color BaseColor;
@@ -29,15 +34,25 @@ namespace PTTT
         public Vector3 MinAngVel;
         public Vector3 MaxAngVel;
 
-        public float TotalRetractionDuration;
-        public AnimationCurve RetractionCurve;
+        public float TotalShowFaceDuration;
+        public AnimationCurve ShowFaceCurve;
+        public float ShowFaceHoldTime;
+
+        public float TotalMoveOffscreenDuration;
+        public AnimationCurve MoveOffscreenCurve;
 
         private int[] shuffleIndices;
 
         private TMPro.TMP_Text currentUpFace;
         private float faceUpDuration;
-        private Vector3 retractionStart;
-        private float retractionDuration;
+
+        private AnimationCurve animCurve;
+        private Vector3 animStartPosition;
+        private Quaternion animStartRotation;
+        private Vector3 animTargetPosition;
+        private Quaternion animTargetRotation;
+        private float animTotalLength;
+        private float animProgress;
 
         private void Start()
         {
@@ -76,7 +91,7 @@ namespace PTTT
             }
         }
 
-        public void AssignFaces(int xFaces, int oFaces)
+        public void AssignFaces(int goodFaces, int badFaces)
         {
             // Knuth shuffle algorithm
             for (int i = 0; i < shuffleIndices.Length; i++ )
@@ -89,39 +104,73 @@ namespace PTTT
 
             for (var i = 0; i < shuffleIndices.Length; i++)
             {
-                if (i < xFaces)
+                if (i < goodFaces)
                 {
-                    FaceTexts[shuffleIndices[i]].text = "X";
+                    FaceTexts[shuffleIndices[i]].text = GOOD_FACE_STRING;
                 }
-                else if (i < xFaces + oFaces)
+                else if (i < goodFaces + badFaces)
                 {
-                    FaceTexts[shuffleIndices[i]].text = "O";
+                    FaceTexts[shuffleIndices[i]].text = BAD_FACE_STRING;
                 }
                 else
                 {
-                    FaceTexts[shuffleIndices[i]].text = "";
+                    FaceTexts[shuffleIndices[i]].text = NEUTRAL_FACE_STRING;
                 }
             }
         }
 
-        public IEnumerator Retract(System.Action finished)
+        public IEnumerator Retract(System.Action holdFinished, System.Action finished)
         {
             RB.isKinematic = true;
-            retractionDuration = 0;
-            retractionStart = transform.position;
 
-            while (retractionDuration < TotalRetractionDuration)
-            {
-                var amt = RetractionCurve.Evaluate(retractionDuration / TotalRetractionDuration);
-                transform.position = ((SpawnPoint.position - retractionStart) * amt) + retractionStart;
-                yield return null;
-                retractionDuration += Time.deltaTime;
-            }
+            yield return ShowWinningFace();
+            yield return new WaitForSeconds(ShowFaceHoldTime);
+            holdFinished();
+            yield return MoveOffscreen();
 
             finished();
         }
 
-        public IEnumerator Roll(System.Action<SquareContents> finished)
+        private IEnumerator ShowWinningFace()
+        {
+            animTargetPosition = ShowFacePoint.position;
+            // Inverting the localrotation gets it so that the face points "forward" along the world z. Then apply 90 degree rotation on x to
+            // get it facing up
+            animTargetRotation =  Quaternion.Euler(90, 0, 0) *
+                Quaternion.Inverse(currentUpFace.transform.localRotation);
+            animCurve = ShowFaceCurve;
+            animTotalLength = TotalShowFaceDuration;
+
+            yield return RunAnimation();
+        }
+
+        private IEnumerator MoveOffscreen()
+        {
+            animTargetPosition = SpawnPoint.position;
+            animTargetRotation = transform.rotation;
+            animCurve = MoveOffscreenCurve;
+            animTotalLength = TotalMoveOffscreenDuration;
+
+            yield return RunAnimation();
+        }
+
+        private IEnumerator RunAnimation()
+        {
+            animProgress = 0;
+            animStartPosition = transform.position;
+            animStartRotation = transform.rotation;
+
+            while (animProgress < animTotalLength)
+            {
+                var amt = animCurve.Evaluate(animProgress / animTotalLength);
+                transform.position = Vector3.Lerp(animStartPosition, animTargetPosition, amt);
+                transform.rotation = Quaternion.Lerp(animStartRotation, animTargetRotation, amt);
+                yield return null;
+                animProgress += Time.deltaTime;
+            }
+        }
+
+        public IEnumerator Roll(bool currentPlayerX, System.Action<SquareContents> finished)
         {
             RB.isKinematic = false;
 
@@ -145,11 +194,22 @@ namespace PTTT
 
             if (currentUpFace is null)
             {
-                StartCoroutine(Roll(finished));
+                StartCoroutine(Roll(currentPlayerX, finished));
             }
             else
             {
-                finished(SquareContentsHelper.FromString(currentUpFace.text));
+                switch (currentUpFace.text)
+                {
+                    case GOOD_FACE_STRING:
+                        finished(currentPlayerX ? SquareContents.X : SquareContents.O);
+                        break;
+                    case BAD_FACE_STRING:
+                        finished(currentPlayerX ? SquareContents.O : SquareContents.X);
+                        break;
+                    default:
+                        finished(SquareContents.Empty);
+                        break;
+                }
             }
         }
 

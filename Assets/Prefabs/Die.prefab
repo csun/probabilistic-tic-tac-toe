@@ -28,7 +28,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
+  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 8280168465583773701}
@@ -99,6 +99,7 @@ MonoBehaviour:
   - {fileID: 3314102173590812617}
   EntryWall: {fileID: 0}
   SpawnPoint: {fileID: 0}
+  ShowFacePoint: {fileID: 0}
   HighlightColor: {r: 1, g: 0.9803922, b: 0.9450981, a: 1}
   BaseColor: {r: 0.20358671, g: 0.21971789, b: 0.23584908, a: 1}
   UpThreshold: 0.95
@@ -109,6 +110,57 @@ MonoBehaviour:
   RandomSpread: 30
   MinAngVel: {x: 360, y: -3000, z: -3000}
   MaxAngVel: {x: 3000, y: 3000, z: 3000}
+  TotalShowFaceDuration: 0.4
+  ShowFaceCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  ShowFaceHoldTime: 1
+  TotalMoveOffscreenDuration: 0.4
+  MoveOffscreenCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 1
+      inSlope: 2
+      outSlope: 2
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &6132316669232712330
 GameObject:
   m_ObjectHideFlags: 0
@@ -248,10 +300,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (17)
@@ -365,10 +425,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (12)
@@ -482,10 +550,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (7)
@@ -599,10 +675,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (3)
@@ -716,10 +800,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (1)
@@ -833,10 +925,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (19)
@@ -950,10 +1050,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (11)
@@ -1067,10 +1175,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (4)
@@ -1184,10 +1300,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (14)
@@ -1301,10 +1425,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (5)
@@ -1418,10 +1550,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (2)
@@ -1535,10 +1675,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (13)
@@ -1652,10 +1800,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (8)
@@ -1769,10 +1925,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (6)
@@ -1886,10 +2050,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face
@@ -2003,10 +2175,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (18)
@@ -2120,10 +2300,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (15)
@@ -2237,10 +2425,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (10)
@@ -2471,10 +2667,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (16)
@@ -2588,10 +2792,18 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_sharedMaterial
+      value: 
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
+    - target: {fileID: 622923073844146297, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
+      propertyPath: m_hasFontAssetChanged
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3712711707332446164, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Materials.Array.data[0]
       value: 
-      objectReference: {fileID: -2571950661263384984, guid: fa94fe77f30c8bd42be7f1320c236cfd, type: 2}
+      objectReference: {fileID: 4870158395220779562, guid: f3cec61718a6a2d46abda6c9237ee6c6, type: 2}
     - target: {fileID: 8565325343131531138, guid: 7215c5de3251ce64bb837f80b378cf97, type: 3}
       propertyPath: m_Name
       value: Die Face (9)

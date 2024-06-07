@@ -10,7 +10,7 @@ namespace PTTT
         {
             Selecting,
             Rolling,
-            Placing
+            Retracting
         }
 
         public Die Die;
@@ -22,6 +22,7 @@ namespace PTTT
 
         private bool xStartNextGame = true;
         private GameSquare selectedSquare;
+        private SquareContents lastRollResult;
 
 
         void Start()
@@ -55,28 +56,27 @@ namespace PTTT
             CurrentState = State.Rolling;
             selectedSquare = selected;
 
-            var xFaces = CurrentlyX ? selected.GoodChances : selected.BadChances;
-            var oFaces = CurrentlyX ? selected.BadChances : selected.GoodChances;
-            Die.AssignFaces(xFaces, oFaces);
+            Die.AssignFaces(selected.GoodChances, selected.BadChances);
 
-            StartCoroutine(Die.Roll(OnRollComplete));
+            StartCoroutine(Die.Roll(CurrentlyX, OnRollComplete));
         }
 
         private void OnRollComplete(SquareContents result)
         {
-            if (result != SquareContents.Empty)
-            {
-                selectedSquare.HandlePlacement(result == SquareContents.X);
-            }
-            SetCurrentPlayer(!CurrentlyX);
-
-            CurrentState = State.Placing;
-            StartCoroutine(Die.Retract(OnPlaceComplete));
+            CurrentState = State.Retracting;
+            lastRollResult = result;
+            StartCoroutine(Die.Retract(OnWinningFaceShown, OnRetractComplete));
         }
 
-        private void OnPlaceComplete()
+        private void OnWinningFaceShown()
+        {
+            selectedSquare.HandlePlacement(lastRollResult);
+        }
+
+        private void OnRetractComplete()
         {
             CurrentState = State.Selecting;
+            SetCurrentPlayer(!CurrentlyX);
         }
 
         void SetCurrentPlayer(bool playerX)
