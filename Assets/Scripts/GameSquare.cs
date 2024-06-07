@@ -83,7 +83,7 @@ namespace PTTT
             {
                 ChangeDesiredHighlightState(false);
             }
-            ForceUpdateHighlight();
+            TryUpdateHighlightState();
         }
 
         public void OnPointerClick(PointerEventData eventData)

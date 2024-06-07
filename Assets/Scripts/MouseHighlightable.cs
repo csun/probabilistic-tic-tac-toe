@@ -10,7 +10,7 @@ namespace PTTT
         IPointerExitHandler
     {
         protected virtual bool canChangeHighlightState => true;
-        protected virtual bool ignoreMouseHighlights => true;
+        protected virtual bool ignoreMouseHighlights => false;
 
         private bool currentHighlightState;
         private bool desiredHighlightState;
@@ -18,12 +18,9 @@ namespace PTTT
         protected abstract void Highlight();
         protected abstract void UnHighlight();
 
-        public void ForceUpdateHighlight()
+        public void TryUpdateHighlightState()
         {
-            if (currentHighlightState == desiredHighlightState)
-            {
-                return;
-            }
+            if (!canChangeHighlightState) { return; }
 
             if (desiredHighlightState)
             {
@@ -47,7 +44,7 @@ namespace PTTT
             if (ignoreMouseHighlights) { return; }
             desiredHighlightState = true;
             if (!canChangeHighlightState) { return; }
-            ForceUpdateHighlight();
+            TryUpdateHighlightState();
         }
 
         public void OnPointerExit(PointerEventData eventData)
@@ -55,7 +52,7 @@ namespace PTTT
             if (ignoreMouseHighlights) { return; }
             desiredHighlightState = false;
             if (!canChangeHighlightState) { return; }
-            ForceUpdateHighlight();
+            TryUpdateHighlightState();
         }
     }
 }

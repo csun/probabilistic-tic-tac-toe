@@ -15,8 +15,11 @@ namespace PTTT
 
         public Die Die;
         public List<GameSquare> Squares;
+        public PlayerSelectButton PlayerSelectButton;
+
         public int MaxNeutralChances;
         public int MinGoodChances;
+        public bool IsSingleplayer { get; private set; }
         public bool CurrentlyX { get; private set; }
         public State CurrentState { get; private set; } = State.Selecting;
 
@@ -38,6 +41,12 @@ namespace PTTT
             ResetBoard();
         }
 
+        public void ChangePlayerMode()
+        {
+            // TODO actually change mode
+            ResetBoard();
+        }
+
         public void ResetBoard()
         {
             SetCurrentPlayer(xStartNextGame);
@@ -53,6 +62,8 @@ namespace PTTT
 
                 square.Reset();
             }
+
+            PlayerSelectButton.TryUpdateHighlightState();
         }
 
         public void OnSquareSelect(GameSquare selected)
