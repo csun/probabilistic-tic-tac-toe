@@ -39,12 +39,13 @@ namespace PTTT
             yield return new WaitForSeconds(FirstBlinksOffTime);
             Highlight();
             yield return new WaitForSeconds(FinalBlinkHoldTime);
+            Refresh();
             onBlinkComplete();
         }
 
-        public void UpdateHighlightBasedOnMouse()
+        public void Refresh()
         {
-            if (mouseInside)
+            if (mouseInside && !ignoreMouseHighlights)
             {
                 Highlight();
             }
@@ -58,14 +59,14 @@ namespace PTTT
         {
             mouseInside = true;
             if (ignoreMouseHighlights) { return; }
-            UpdateHighlightBasedOnMouse();
+            Refresh();
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
             mouseInside = false;
             if (ignoreMouseHighlights) { return; }
-            UpdateHighlightBasedOnMouse();
+            Refresh();
         }
     }
 }

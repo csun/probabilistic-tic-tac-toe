@@ -31,6 +31,7 @@ namespace PTTT
         private bool xStartNextGame = true;
         private GameSquare selectedSquare;
         private SquareContents lastRollResult;
+        private BoardAnalyzer analyzer;
 
 
         void Start()
@@ -39,15 +40,18 @@ namespace PTTT
             Application.targetFrameRate = 60;
             Time.fixedDeltaTime = 1.0f / Application.targetFrameRate;
 
+            analyzer = new(Squares);
+
             SetPlayerMode(false);
         }
 
         public void SetPlayerMode(bool singleplayer)
         {
             IsSingleplayer = singleplayer;
+            xStartNextGame = true;
             ResetScore();
             ResetBoard();
-            PlayerSelectButton.UpdateHighlightBasedOnMouse();
+            PlayerSelectButton.Refresh();
         }
 
         private void ResetScore()
@@ -99,20 +103,37 @@ namespace PTTT
 
         private void OnPlacementComplete()
         {
-            var shouldEndGame = TryEndGame();
-            if (!shouldEndGame)
+            var winstate = analyzer.GetWinState();
+
+            ScoreIndicator winner;
+            switch (winstate)
+            {
+                case BoardAnalyzer.WinState.XWin:
+                    winner = XScore;
+                    break;
+                case BoardAnalyzer.WinState.OWin:
+                    winner = OScore;
+                    break;
+                case BoardAnalyzer.WinState.Stalemate:
+                    winner = TieScore;
+                    break;
+                default:
+                    winner = null;
+                    break;
+            }
+
+            if (winner is null)
             {
                 CurrentState = State.Selecting;
                 SetCurrentPlayer(!CurrentlyX);
+                foreach (var square in Squares) { square.Refresh(); }
+            }
+            else
+            {
+                CurrentState = State.DisplayingWinner;
+                StartCoroutine(DisplayWinner(winner));
             }
 
-        }
-
-        private bool TryEndGame()
-        {
-            CurrentState = State.DisplayingWinner;
-            StartCoroutine(DisplayWinner(XScore));
-            return true;
         }
 
         private IEnumerator DisplayWinner(ScoreIndicator winner)
@@ -131,6 +152,7 @@ namespace PTTT
             CurrentlyX = playerX;
             (CurrentlyX ? XScore : OScore).Highlight();
             (CurrentlyX ? OScore : XScore).UnHighlight();
+            TieScore.UnHighlight();
         }
     }
 }

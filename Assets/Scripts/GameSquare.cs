@@ -65,7 +65,7 @@ namespace PTTT
                 }
                 else
                 {
-                    UpdateHighlightBasedOnMouse();
+                    Refresh();
                 }
             }));
         }

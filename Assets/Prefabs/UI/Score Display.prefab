@@ -186,9 +186,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TotalBlinks: 3
-  FirstBlinksOnTime: 0.5
-  FirstBlinksOffTime: 0.5
-  FinalBlinkHoldTime: 2
+  FirstBlinksOnTime: 0.25
+  FirstBlinksOffTime: 0.25
+  FinalBlinkHoldTime: 1.5
   HeaderText: {fileID: 4926571625991346699}
   ScoreText: {fileID: 7133736882843151982}
   Background: {fileID: 1408737969261363662}
