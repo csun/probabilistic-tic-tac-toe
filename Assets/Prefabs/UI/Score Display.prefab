@@ -185,6 +185,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec66f0304beb4634d86b1c63d5ee51cc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TotalBlinks: 3
+  FirstBlinksOnTime: 0.5
+  FirstBlinksOffTime: 0.5
+  FinalBlinkHoldTime: 2
   HeaderText: {fileID: 4926571625991346699}
   ScoreText: {fileID: 7133736882843151982}
   Background: {fileID: 1408737969261363662}

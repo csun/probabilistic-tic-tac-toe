@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace PTTT
 {
-    public class ScoreIndicator : MonoBehaviour
+    public class ScoreIndicator : Highlightable
     {
         public TMPro.TMP_Text HeaderText;
         public TMPro.TMP_Text ScoreText;
@@ -17,7 +17,7 @@ namespace PTTT
         public Color BackgroundSelectedColor;
 
         public int Count
-        { 
+        {
             get { return _count; }
             set
             {
@@ -27,14 +27,14 @@ namespace PTTT
         }
         private int _count;
 
-        public void Highlight()
+        public override void Highlight()
         {
             HeaderText.color = TextSelectedColor;
             ScoreText.color = TextSelectedColor;
             Background.color = BackgroundSelectedColor;
         }
 
-        public void UnHighlight()
+        public override void UnHighlight()
         {
             HeaderText.color = TextUnselectedColor;
             ScoreText.color = TextUnselectedColor;

@@ -10,7 +10,8 @@ namespace PTTT
         {
             Selecting,
             Rolling,
-            Retracting
+            Retracting,
+            DisplayingWinner
         }
 
         public Die Die;
@@ -38,17 +39,27 @@ namespace PTTT
             Application.targetFrameRate = 60;
             Time.fixedDeltaTime = 1.0f / Application.targetFrameRate;
 
-            ResetBoard();
+            SetPlayerMode(false);
         }
 
-        public void ChangePlayerMode()
+        public void SetPlayerMode(bool singleplayer)
         {
-            // TODO actually change mode
+            IsSingleplayer = singleplayer;
+            ResetScore();
             ResetBoard();
+            PlayerSelectButton.UpdateHighlightBasedOnMouse();
         }
 
-        public void ResetBoard()
+        private void ResetScore()
         {
+            XScore.Count = 0;
+            OScore.Count = 0;
+            TieScore.Count = 0;
+        }
+
+        private void ResetBoard()
+        {
+            CurrentState = State.Selecting;
             SetCurrentPlayer(xStartNextGame);
             xStartNextGame = !xStartNextGame;
 
@@ -62,8 +73,6 @@ namespace PTTT
 
                 square.Reset();
             }
-
-            PlayerSelectButton.TryUpdateHighlightState();
         }
 
         public void OnSquareSelect(GameSquare selected)
@@ -90,8 +99,31 @@ namespace PTTT
 
         private void OnPlacementComplete()
         {
-            CurrentState = State.Selecting;
-            SetCurrentPlayer(!CurrentlyX);
+            var shouldEndGame = TryEndGame();
+            if (!shouldEndGame)
+            {
+                CurrentState = State.Selecting;
+                SetCurrentPlayer(!CurrentlyX);
+            }
+
+        }
+
+        private bool TryEndGame()
+        {
+            CurrentState = State.DisplayingWinner;
+            StartCoroutine(DisplayWinner(XScore));
+            return true;
+        }
+
+        private IEnumerator DisplayWinner(ScoreIndicator winner)
+        {
+            XScore.UnHighlight();
+            TieScore.UnHighlight();
+            OScore.UnHighlight();
+
+            winner.Count++;
+
+            yield return winner.Blink(ResetBoard);
         }
 
         void SetCurrentPlayer(bool playerX)

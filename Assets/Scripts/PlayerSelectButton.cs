@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace PTTT
 {
-    public class PlayerSelectButton : MouseHighlightable,
+    public class PlayerSelectButton : Highlightable,
         IPointerClickHandler
     {
         public GameManager Manager;
@@ -21,15 +21,15 @@ namespace PTTT
         public Color BackgroundHighlightColor;
         public Color BackgroundUnHighlightColor;
 
-        protected override bool canChangeHighlightState => Manager.CurrentState == GameManager.State.Selecting;
+        protected override bool ignoreMouseHighlights => Manager.CurrentState != GameManager.State.Selecting;
 
         public void OnPointerClick(PointerEventData eventData)
         {
             if (Manager.CurrentState != GameManager.State.Selecting) { return; }
-            Manager.ChangePlayerMode();
+            Manager.SetPlayerMode(!Manager.IsSingleplayer);
         }
 
-        protected override void Highlight()
+        public override void Highlight()
         {
             var activeText = Manager.IsSingleplayer ? SoloText : CPUText;
             var inactiveText = Manager.IsSingleplayer ? CPUText : SoloText;
@@ -39,7 +39,7 @@ namespace PTTT
             Background.color = BackgroundHighlightColor;
         }
 
-        protected override void UnHighlight()
+        public override void UnHighlight()
         {
             var activeText = Manager.IsSingleplayer ? SoloText : CPUText;
             var inactiveText = Manager.IsSingleplayer ? CPUText : SoloText;

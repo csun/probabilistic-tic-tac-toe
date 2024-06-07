@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace PTTT
 {
-    public class GameSquare : MouseHighlightable,
+    public class GameSquare : Highlightable,
         IPointerClickHandler
     {
         public GameManager Manager;
@@ -14,11 +14,6 @@ namespace PTTT
         public SquareContents CurrentContents;
         public int GoodChances;
         public int BadChances;
-
-        public int TotalBlinks;
-        public float FirstBlinksOnTime;
-        public float FirstBlinksOffTime;
-        public float FinalBlinkHoldTime;
 
         public Color StatUnselectedColor;
         public Color StatSelectedColor;
@@ -33,8 +28,7 @@ namespace PTTT
         public StatBar BadBar;
         public TMPro.TMP_Text PlacedText;
 
-        protected override bool canChangeHighlightState => Manager.CurrentState == GameManager.State.Selecting;
-        protected override bool ignoreMouseHighlights => CurrentContents != SquareContents.Empty;
+        protected override bool ignoreMouseHighlights => CurrentContents != SquareContents.Empty || Manager.CurrentState != GameManager.State.Selecting;
 
         public void Reset()
         {
@@ -61,38 +55,29 @@ namespace PTTT
                 NeutralBar.gameObject.SetActive(false);
             }
 
-            StartCoroutine(Blink(onPlacementComplete));
-        }
-
-        private IEnumerator Blink(System.Action onPlacementComplete)
-        {
-            for (var i = 0; i < TotalBlinks - 1; i++)
+            StartCoroutine(Blink(() =>
             {
-                UnHighlight();
-                yield return new WaitForSeconds(FirstBlinksOffTime);
-                Highlight();
-                yield return new WaitForSeconds(FirstBlinksOnTime);
-            }
-            UnHighlight();
-            yield return new WaitForSeconds(FirstBlinksOffTime);
-            Highlight();
-            yield return new WaitForSeconds(FinalBlinkHoldTime);
-            onPlacementComplete();
+                onPlacementComplete();
 
-            if (CurrentContents != SquareContents.Empty)
-            {
-                ChangeDesiredHighlightState(false);
-            }
-            TryUpdateHighlightState();
+                if (CurrentContents != SquareContents.Empty)
+                {
+                    UnHighlight();
+                }
+                else
+                {
+                    UpdateHighlightBasedOnMouse();
+                }
+            }));
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
             if (CurrentContents != SquareContents.Empty || Manager.CurrentState != GameManager.State.Selecting) { return; }
+            Highlight();
             Manager.OnSquareSelect(this);
         }
 
-        protected override void Highlight()
+        public override void Highlight()
         {
             GoodBar.UpdateColor(StatSelectedColor);
             BadBar.UpdateColor(StatSelectedColor);
@@ -101,7 +86,7 @@ namespace PTTT
             Background.color = BackgroundSelectedColor;
         }
 
-        protected override void UnHighlight()
+        public override void UnHighlight()
         {
             GoodBar.UpdateColor(StatUnselectedColor);
             BadBar.UpdateColor(StatUnselectedColor);
