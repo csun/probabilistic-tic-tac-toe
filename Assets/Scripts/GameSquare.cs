@@ -55,8 +55,6 @@ namespace PTTT
 
         public void HandlePlayerChange(bool playerIsX)
         {
-            GoodBar.PlayerText.text = playerIsX ? "X" : "O";
-            BadBar.PlayerText.text = playerIsX ? "O" : "X";
             UnHighlight();
         }
 
