@@ -33,11 +33,26 @@ namespace PTTT
         private SquareContents lastRollResult;
         private BoardAnalyzer analyzer;
 
+// Define SIMMODE to have the cpu play against completely random moves
+#if SIMMODE
+        private bool shouldResetNextTurn;
+
+        private void Update()
+        {
+            if (shouldResetNextTurn)
+            {
+                shouldResetNextTurn = false;
+                ResetBoard();
+            }
+        }
+#endif
+
 
         void Start()
         {
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 60;
+
             Time.fixedDeltaTime = 1.0f / Application.targetFrameRate;
 
             analyzer = new(Squares);
@@ -91,9 +106,26 @@ namespace PTTT
             selectedSquare = selected;
 
             selectedSquare.Highlight();
+#if SIMMODE
+            var rand = Random.Range(0, 20);
+            if (rand < selected.GoodChances)
+            {
+                lastRollResult = CurrentlyX ? SquareContents.X : SquareContents.O;
+            }
+            else if (rand < selected.GoodChances + selected.BadChances)
+            {
+                lastRollResult = CurrentlyX ? SquareContents.O : SquareContents.X;
+            }
+            else
+            {
+                lastRollResult = SquareContents.Empty;
+            }
+            selected.HandlePlacement(lastRollResult, OnPlacementComplete);
+#else
             Die.AssignFaces(selected.GoodChances, selected.BadChances);
 
             StartCoroutine(Die.Roll(CurrentlyX, OnRollComplete));
+#endif
         }
 
         private void OnRollComplete(SquareContents result)
@@ -137,8 +169,13 @@ namespace PTTT
             }
             else
             {
+#if SIMMODE
+                winner.Count++;
+                shouldResetNextTurn = true;
+#else
                 CurrentState = State.DisplayingWinner;
                 StartCoroutine(DisplayWinner(winner));
+#endif
             }
 
         }
@@ -165,6 +202,12 @@ namespace PTTT
             {
                 DoCPUMove();
             }
+#if SIMMODE
+            else
+            {
+                OnSquareSelect(analyzer.RandomValidMove());
+            }
+#endif
         }
 
         void DoCPUMove()

@@ -56,10 +56,11 @@ namespace PTTT
                 NeutralBar.gameObject.SetActive(false);
             }
 
+#if SIMMODE
+            onPlacementComplete();
+#else
             StartCoroutine(Blink(() =>
             {
-                onPlacementComplete();
-
                 if (CurrentContents != SquareContents.Empty)
                 {
                     UnHighlight();
@@ -68,7 +69,10 @@ namespace PTTT
                 {
                     Refresh();
                 }
+
+                onPlacementComplete();
             }));
+#endif
         }
 
         public void OnPointerClick(PointerEventData eventData)

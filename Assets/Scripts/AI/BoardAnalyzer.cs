@@ -75,6 +75,19 @@ namespace PTTT
             }
         }
 
+#if SIMMODE
+        public GameSquare RandomValidMove()
+        {
+            var validMoves = new List<GameSquare>();
+            foreach (var square in sequencesForSquare.Keys)
+            {
+               if (square.CurrentContents == SquareContents.Empty) { validMoves.Add(square); }
+            }
+
+            return validMoves[Random.Range(0, validMoves.Count)];
+        }
+#endif
+
         public GameSquare BestMoveForO()
         {
             var bestScore = float.MinValue;
