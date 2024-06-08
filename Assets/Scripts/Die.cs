@@ -30,7 +30,7 @@ namespace PTTT
         public Rigidbody RB;
         public float MinVel;
         public float MaxVel;
-        public float RandomSpread;
+        public float MaxSpread;
         public Vector3 MinAngVel;
         public Vector3 MaxAngVel;
 
@@ -178,7 +178,7 @@ namespace PTTT
             EntryWall.isTrigger = true;
             RB.position = SpawnPoint.position;
 
-            var forward = Quaternion.AngleAxis(Random.Range(-RandomSpread, RandomSpread), SpawnPoint.up) * SpawnPoint.forward;
+            var forward = Quaternion.AngleAxis(Random.Range(-MaxSpread, MaxSpread), SpawnPoint.up) * SpawnPoint.forward;
             RB.velocity = forward * Random.Range(MinVel, MaxVel);
             RB.angularVelocity = new Vector3(
                 Random.Range(MinAngVel.x, MaxAngVel.x),

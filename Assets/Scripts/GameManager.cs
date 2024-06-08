@@ -28,6 +28,8 @@ namespace PTTT
         public ScoreIndicator TieScore;
         public ScoreIndicator OScore;
 
+        public DieBoundsResizer DieBoundsResizer;
+
         private bool xStartNextGame = true;
         private GameSquare selectedSquare;
         private SquareContents lastRollResult;
@@ -58,6 +60,7 @@ namespace PTTT
             analyzer = new(Squares);
 
             SetPlayerMode(true);
+            DieBoundsResizer.Recalculate();
         }
 
         public void SetPlayerMode(bool singleplayer)
@@ -122,6 +125,7 @@ namespace PTTT
             }
             selected.HandlePlacement(lastRollResult, OnPlacementComplete);
 #else
+            DieBoundsResizer.Recalculate();
             Die.AssignFaces(selected.GoodChances, selected.BadChances);
 
             StartCoroutine(Die.Roll(CurrentlyX, OnRollComplete));
