@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Profiling;
 using UnityEngine;
+using UnityEngine.Profiling;
 
 namespace PTTT
 {
@@ -11,7 +13,7 @@ namespace PTTT
         private List<BoardWinSequence> winSequences = new();
         private Dictionary<GameSquare, List<BoardWinSequence>> sequencesForSquare = new();
 
-        private Solver solver;
+        private OptimalSolver solver;
 
 
         private int Idx(int row, int col) => row * 3 + col;
@@ -69,7 +71,7 @@ namespace PTTT
             };
             AddSeq(new BoardWinSequence { Squares = rlDiag });
 
-            solver = new Solver(squares);
+            solver = new OptimalSolver(squares);
 
         }
 
@@ -95,35 +97,42 @@ namespace PTTT
         }
 #endif
 
-        public GameSquare BestMoveForO(bool optimal = true)
+        public GameSquare BestMoveForO(bool optimal=true)
         {
-            if (optimal)
-                return solver.BestMoveForO();
+            ProfilerMarker profiler = new ProfilerMarker("PTTT.BestMoveForO");
 
-            var bestScore = float.MinValue;
-            GameSquare bestSquare = null;
-
-            foreach (var square in sequencesForSquare.Keys)
+            using (profiler.Auto())
             {
-                if (square.CurrentContents != SquareContents.Empty) { continue; }
-                var score = 0f;
-                foreach (var seq in sequencesForSquare[square])
+                if (optimal)
                 {
-                    score += seq.OScore;
+                    return solver.BestMoveForO();
                 }
 
-                var ratio = (square.GoodChances - square.BadChances) / 20f;
-                score *= ratio;
-                score -= square.NeutralChances * INACTION_PENALTY;
+                var bestScore = float.MinValue;
+                GameSquare bestSquare = null;
 
-                if (score > bestScore)
+                foreach (var square in sequencesForSquare.Keys)
                 {
-                    bestScore = score;
-                    bestSquare = square;
+                    if (square.CurrentContents != SquareContents.Empty) { continue; }
+                    var score = 0f;
+                    foreach (var seq in sequencesForSquare[square])
+                    {
+                        score += seq.OScore;
+                    }
+
+                    var ratio = (square.GoodChances - square.BadChances) / 20f;
+                    score *= ratio;
+                    score -= square.NeutralChances * INACTION_PENALTY;
+
+                    if (score > bestScore)
+                    {
+                        bestScore = score;
+                        bestSquare = square;
+                    }
                 }
+
+                return bestSquare;
             }
-
-            return bestSquare;
         }
 
         public WinState GetWinState(GameSquare lastMove)

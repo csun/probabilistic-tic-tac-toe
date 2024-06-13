@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.Profiling;
 
 namespace PTTT
 {
-    public class Solver
+    public class OptimalSolver
     {
 
         public static (double, int)[] HullIntersection(List<(double, double)> f, List<(double, double)> g)
@@ -62,7 +63,7 @@ namespace PTTT
 
         private static readonly Dictionary<string, ((double, int?), (double, int?))> ValueCache = new Dictionary<string, ((double, int?), (double, int?))>();
         private readonly GameSquare[] squares;
-        public Solver(List<GameSquare> squares)
+        public OptimalSolver(List<GameSquare> squares)
         {
             this.squares = squares.ToArray();
         }

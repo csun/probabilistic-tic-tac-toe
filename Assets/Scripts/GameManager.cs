@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace PTTT
 {
@@ -11,12 +12,14 @@ namespace PTTT
             Selecting,
             Rolling,
             Retracting,
-            DisplayingWinner
+            DisplayingWinner,
+            InMenu
         }
 
         public Die Die;
         public List<GameSquare> Squares;
-        public PlayerSelectButton PlayerSelectButton;
+
+        public MenuManager MenuManager;
 
         public int MaxNeutralChances;
         public int MinGoodChances;
@@ -49,7 +52,6 @@ namespace PTTT
         }
 #endif
 
-
         void Start()
         {
             QualitySettings.vSyncCount = 0;
@@ -72,7 +74,18 @@ namespace PTTT
             xStartNextGame = true;
             ResetScore();
             ResetBoard();
-            PlayerSelectButton.Refresh();
+        }
+
+        public void OpenMenu()
+        {
+            CurrentState = State.InMenu;
+            StartCoroutine(MenuManager.OpenMenu(() => { }));
+        }
+
+        public void CloseMenu()
+        {
+            CurrentState = State.Selecting;
+            StartCoroutine(MenuManager.CloseMenu(() => { }));
         }
 
         private void ResetScore()
