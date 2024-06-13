@@ -15,6 +15,7 @@ namespace PTTT
         public float FinalBlinkHoldTime;
 
         protected virtual bool ignoreMouseHighlights => true;
+        protected virtual bool refreshDefaultValue => false;
 
         private bool mouseInside;
 
