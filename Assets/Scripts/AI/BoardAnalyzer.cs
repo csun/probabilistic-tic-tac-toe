@@ -11,6 +11,9 @@ namespace PTTT
         private List<BoardWinSequence> winSequences = new();
         private Dictionary<GameSquare, List<BoardWinSequence>> sequencesForSquare = new();
 
+        private Solver solver;
+
+
         private int Idx(int row, int col) => row * 3 + col;
 
         public BoardAnalyzer(List<GameSquare> squares)
@@ -65,6 +68,9 @@ namespace PTTT
                 squares[Idx(2, 0)]
             };
             AddSeq(new BoardWinSequence { Squares = rlDiag });
+
+            solver = new Solver(squares);
+
         }
 
         public void Reset()
@@ -73,6 +79,7 @@ namespace PTTT
             {
                 seq.Reset();
             }
+            solver.Reset();
         }
 
 #if SIMMODE
@@ -88,8 +95,11 @@ namespace PTTT
         }
 #endif
 
-        public GameSquare BestMoveForO()
+        public GameSquare BestMoveForO(bool optimal = true)
         {
+            if (optimal)
+                return solver.BestMoveForO();
+
             var bestScore = float.MinValue;
             GameSquare bestSquare = null;
 
