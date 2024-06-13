@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-// to use debug
-using UnityEngine;
 
 namespace PTTT
 {
@@ -126,7 +124,6 @@ namespace PTTT
                     _ => throw new Exception("Invalid square content")
                 };
             }
-            Debug.Log($"Value(state) = {Value(state)}");
             (_, (double _, int? bestMove)) = Value(state);
             if (bestMove == null)
                 throw new Exception("Best move is null");
