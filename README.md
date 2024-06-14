@@ -6,6 +6,8 @@
 This is a [Unity](https://unity.com/) project, so you will need to install Unity version 2022.3.16f1 to edit / build it.
 
 ## Attribution
+Impossible difficulty mode implemented by Louis Abraham as described [here.](https://louisabraham.github.io/articles/probabilistic-tic-tac-toe)
+
 Icons are by [Font Awesome](https://fontawesome.com/), licensed under CC BY 4.0
 
 Font is [Multicolore](https://www.dafont.com/multicolore.font)
