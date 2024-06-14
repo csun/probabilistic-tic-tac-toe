@@ -170,6 +170,9 @@ namespace PTTT
 
         public IEnumerator Roll(bool currentPlayerX, System.Action<SquareContents> finished)
         {
+            // TODO Hack - wait one frame to prevent stutter when optimal AI is thinking
+            yield return null;
+
             RB.isKinematic = false;
 
             currentUpFace = null;

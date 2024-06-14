@@ -43,6 +43,7 @@ namespace PTTT
         private GameSquare selectedSquare;
         private SquareContents lastRollResult;
         private BoardAnalyzer analyzer;
+        private bool needsTutorUpdate;
 
 // Define SIMMODE to have the cpu play against completely random moves
 #if SIMMODE
@@ -86,6 +87,8 @@ namespace PTTT
         {
             var shouldReset = singleplayer != IsSingleplayer || optimalDifficulty != IsOptimalDifficulty;
 
+            needsTutorUpdate = showWinProbabilities != ShowWinProbabilities || (shouldReset && showWinProbabilities);
+
             IsSingleplayer = singleplayer;
             IsOptimalDifficulty = optimalDifficulty;
             ShowWinProbabilities = showWinProbabilities;
@@ -114,7 +117,13 @@ namespace PTTT
         public void CloseMenu()
         {
             CurrentState = State.Selecting;
-            StartCoroutine(MenuManager.CloseMenu(() => { }));
+            StartCoroutine(MenuManager.CloseMenu(() => {
+                if (needsTutorUpdate)
+                {
+                    analyzer.UpdateBoardWinChances(CurrentlyX);
+                    needsTutorUpdate = false;
+                }
+            }));
             OnGUIRefresh.Invoke();
         }
 
@@ -243,7 +252,8 @@ namespace PTTT
         {
             CurrentlyX = playerX;
 
-            if (ShowWinProbabilities)
+            // needsTutorUpdate indicates that it's already going to trigger when menu finishes hiding
+            if (ShowWinProbabilities && !needsTutorUpdate)
             {
                 analyzer.UpdateBoardWinChances(CurrentlyX);
             }
