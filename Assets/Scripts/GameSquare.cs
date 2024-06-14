@@ -32,6 +32,8 @@ namespace PTTT
         public TMPro.TMP_Text WinsText;
         public TMPro.TMP_Text PlacedText;
 
+        private bool shouldShowWins => Manager.ShowWinProbabilities && CurrentContents == SquareContents.Empty;
+
         protected override bool ignoreMouseHighlights => CurrentContents != SquareContents.Empty || Manager.CurrentState != GameManager.State.Selecting;
 
         public void Reset()
@@ -89,11 +91,9 @@ namespace PTTT
 
         public override void Refresh()
         {
-            var shouldShowWins = Manager.ShowWinProbabilities && CurrentContents == SquareContents.Empty;
-            WinsText.gameObject.SetActive(shouldShowWins);
             if (shouldShowWins)
             {
-                WinsText.text = $"{WinChance.ToString("0.00")}";
+                WinsText.text = $"{(WinChance * 100).ToString("0")}% strength";
             }
 
             base.Refresh();
@@ -101,6 +101,8 @@ namespace PTTT
 
         public override void Highlight()
         {
+            WinsText.gameObject.SetActive(shouldShowWins);
+
             GoodBar.UpdateColor(StatSelectedColor);
             BadBar.UpdateColor(StatSelectedColor);
             NeutralBar.UpdateColor(StatSelectedColor);
@@ -110,6 +112,8 @@ namespace PTTT
 
         public override void UnHighlight()
         {
+            WinsText.gameObject.SetActive(false);
+
             GoodBar.UpdateColor(StatUnselectedColor);
             BadBar.UpdateColor(StatUnselectedColor);
             NeutralBar.UpdateColor(StatUnselectedColor);
