@@ -59,6 +59,7 @@ namespace PTTT
 #if SIMMODE
             onPlacementComplete();
 #else
+            DefaultHighlightStateChecker = () => false;
             StartCoroutine(Blink(() =>
             {
                 if (CurrentContents != SquareContents.Empty)
@@ -78,7 +79,6 @@ namespace PTTT
         public void OnPointerClick(PointerEventData eventData)
         {
             if (CurrentContents != SquareContents.Empty || Manager.CurrentState != GameManager.State.Selecting) { return; }
-            Highlight();
             Manager.OnSquareSelect(this);
         }
 

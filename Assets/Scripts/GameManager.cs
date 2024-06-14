@@ -7,6 +7,8 @@ namespace PTTT
 {
     public class GameManager : MonoBehaviour
     {
+        public static GameManager Instance { get; private set; }
+
         public enum State
         {
             Selecting,
@@ -23,6 +25,8 @@ namespace PTTT
 
         public int MaxNeutralChances;
         public int MinGoodChances;
+        public bool IsOptimalDifficulty { get; private set; }
+        public bool ShowWinProbabilities { get; private set; }
         public bool IsSingleplayer { get; private set; }
         public bool CurrentlyX { get; private set; }
         public State CurrentState { get; private set; } = State.Selecting;
@@ -32,6 +36,8 @@ namespace PTTT
         public ScoreIndicator OScore;
 
         public DieBoundsResizer DieBoundsResizer;
+
+        public UnityEvent OnGUIRefresh = new();
 
         private bool xStartNextGame = true;
         private GameSquare selectedSquare;
@@ -54,38 +60,62 @@ namespace PTTT
 
         void Start()
         {
+            Instance = this;
+
             QualitySettings.vSyncCount = 0;
             Application.targetFrameRate = 60;
 
             Time.fixedDeltaTime = 1.0f / Application.targetFrameRate;
 
+            XScore.DefaultHighlightStateChecker = () => CurrentlyX;
+            OScore.DefaultHighlightStateChecker = () => !CurrentlyX;
+
             analyzer = new(Squares);
 
-            SetPlayerMode(true);
+            UpdateSettings(singleplayer: true, optimalDifficulty: false, showWinProbabilities: false);
+            OnGUIRefresh.Invoke();
             DieBoundsResizer.Recalculate();
         }
 
-        public void SetPlayerMode(bool singleplayer)
+        private void OnDestroy()
         {
+            Instance = null;
+        }
+
+        public void UpdateSettings(bool singleplayer, bool optimalDifficulty, bool showWinProbabilities)
+        {
+            var shouldReset = singleplayer != IsSingleplayer || optimalDifficulty != IsOptimalDifficulty;
+
             IsSingleplayer = singleplayer;
+            IsOptimalDifficulty = optimalDifficulty;
+            ShowWinProbabilities = showWinProbabilities;
 
             OScore.HeaderText.text = singleplayer ? "CPU - O" : "Player - O";
 
-            xStartNextGame = true;
-            ResetScore();
-            ResetBoard();
+            if (shouldReset)
+            {
+                xStartNextGame = true;
+                ResetScore();
+                ResetBoard();
+            }
+            else
+            {
+                OnGUIRefresh.Invoke();
+            }
         }
 
         public void OpenMenu()
         {
             CurrentState = State.InMenu;
             StartCoroutine(MenuManager.OpenMenu(() => { }));
+            OnGUIRefresh.Invoke();
         }
 
         public void CloseMenu()
         {
             CurrentState = State.Selecting;
             StartCoroutine(MenuManager.CloseMenu(() => { }));
+            OnGUIRefresh.Invoke();
         }
 
         private void ResetScore()
@@ -114,14 +144,14 @@ namespace PTTT
 
             SetCurrentPlayer(xStartNextGame);
             xStartNextGame = !xStartNextGame;
+
+            OnGUIRefresh.Invoke();
         }
 
         public void OnSquareSelect(GameSquare selected)
         {
             CurrentState = State.Rolling;
             selectedSquare = selected;
-
-            selectedSquare.Highlight();
 #if SIMMODE
             var rand = Random.Range(0, 20);
             if (rand < selected.GoodChances)
@@ -138,6 +168,7 @@ namespace PTTT
             }
             selected.HandlePlacement(lastRollResult, OnPlacementComplete);
 #else
+            selected.DefaultHighlightStateChecker = () => true;
             DieBoundsResizer.Recalculate();
             Die.AssignFaces(selected.GoodChances, selected.BadChances);
 
@@ -181,8 +212,8 @@ namespace PTTT
             if (winner is null)
             {
                 CurrentState = State.Selecting;
-                foreach (var square in Squares) { square.Refresh(); }
                 SetCurrentPlayer(!CurrentlyX);
+                OnGUIRefresh.Invoke();
             }
             else
             {
@@ -211,9 +242,6 @@ namespace PTTT
         void SetCurrentPlayer(bool playerX)
         {
             CurrentlyX = playerX;
-            (CurrentlyX ? XScore : OScore).Highlight();
-            (CurrentlyX ? OScore : XScore).UnHighlight();
-            TieScore.UnHighlight();
 
             if (!CurrentlyX && IsSingleplayer)
             {
@@ -230,7 +258,7 @@ namespace PTTT
         void DoCPUMove()
         {
             foreach (var square in Squares) { square.UnHighlight(); }
-            OnSquareSelect(analyzer.BestMoveForO());
+            OnSquareSelect(analyzer.BestMoveForO(IsOptimalDifficulty));
         }
     }
 }

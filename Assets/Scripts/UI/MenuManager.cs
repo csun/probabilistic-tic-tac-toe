@@ -7,11 +7,17 @@ namespace PTTT
 {
     public class MenuManager : MonoBehaviour
     {
+        public GameManager GameManager;
+
         public RectTransform GameScreenRect;
         public RectTransform MenuScreenRect;
 
         public AnimationCurve TransitionCurve;
         public float TransitionTime;
+
+        public ToggleGroup SingleplayerToggle;
+        public ToggleGroup OptimalToggle;
+        public ToggleGroup ShowWinToggle;
 
         private void Start()
         {
@@ -26,11 +32,19 @@ namespace PTTT
 
         public IEnumerator OpenMenu(Action callback)
         {
+            SingleplayerToggle.SettingDesired = GameManager.IsSingleplayer;
+            OptimalToggle.SettingDesired = GameManager.IsOptimalDifficulty;
+            ShowWinToggle.SettingDesired = GameManager.ShowWinProbabilities;
+
             yield return RunAnimation(0, -1, callback);
         }
 
         public IEnumerator CloseMenu(Action callback)
         {
+            GameManager.UpdateSettings(
+                singleplayer: SingleplayerToggle.SettingDesired,
+                optimalDifficulty: OptimalToggle.SettingDesired,
+                showWinProbabilities: ShowWinToggle.SettingDesired);
             yield return RunAnimation(-1, 1, callback);
         }
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -15,19 +16,22 @@ namespace PTTT
         public float FinalBlinkHoldTime;
 
         protected virtual bool ignoreMouseHighlights => true;
-        protected virtual bool refreshDefaultValue => false;
+        protected virtual bool refreshDefaultValue => DefaultHighlightStateChecker is not null ? DefaultHighlightStateChecker() : false;
 
         private bool mouseInside;
+
+        public Func<bool> DefaultHighlightStateChecker;
 
         public abstract void Highlight();
         public abstract void UnHighlight();
 
         private void Start()
         {
-            UnHighlight();
+            GameManager.Instance.OnGUIRefresh.AddListener(Refresh);
+            Refresh();
         }
 
-        public IEnumerator Blink(System.Action onBlinkComplete)
+        public IEnumerator Blink(Action onBlinkComplete)
         {
             for (var i = 0; i < TotalBlinks - 1; i++)
             {
@@ -40,13 +44,13 @@ namespace PTTT
             yield return new WaitForSeconds(FirstBlinksOffTime);
             Highlight();
             yield return new WaitForSeconds(FinalBlinkHoldTime);
-            Refresh();
             onBlinkComplete();
+            Refresh();
         }
 
-        public void Refresh()
+        public virtual void Refresh()
         {
-            if (mouseInside && !ignoreMouseHighlights)
+            if (refreshDefaultValue || (mouseInside && !ignoreMouseHighlights))
             {
                 Highlight();
             }

@@ -10,7 +10,6 @@ namespace PTTT
     public class SimpleButton : Highlightable,
         IPointerClickHandler
     {
-        public GameManager Manager;
         public UnityEvent Action;
 
         public TMPro.TMP_Text Text;
@@ -25,8 +24,8 @@ namespace PTTT
         public bool IsMenuButton;
 
         protected override bool ignoreMouseHighlights => IsMenuButton ?
-            Manager.CurrentState != GameManager.State.InMenu : 
-            Manager.CurrentState != GameManager.State.Selecting;
+            GameManager.Instance.CurrentState != GameManager.State.InMenu : 
+            GameManager.Instance.CurrentState != GameManager.State.Selecting;
 
         public void OnPointerClick(PointerEventData eventData)
         {
