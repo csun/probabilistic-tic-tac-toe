@@ -65,53 +65,72 @@ namespace PTTT
 
         private static readonly Dictionary<string, ((double, int?), (double, int?))> ValueCache = new Dictionary<string, ((double, int?), (double, int?))>();
         private readonly GameSquare[] squares;
+        private double[] successes = new double[9];
+        private double[] neutrals = new double[9];
+        private double[] failures = new double[9];
+        private object __lockObj = new();
+
         public OptimalSolver(List<GameSquare> squares)
         {
             this.squares = squares.ToArray();
         }
 
+        // Need to do this so that we can run Value in a background thread
+        public void LoadChances()
+        {
+            for (int i = 0; i < 9; i++)
+            {
+                successes[i] = (double)squares[i].GoodChances / 20;
+                neutrals[i] = (double)squares[i].NeutralChances / 20;
+                failures[i] = (double)squares[i].BadChances / 20;
+            }
+        }
+
         public ((double, int?), (double, int?)) Value(char?[] state = null)
         {
-            if (state == null)
-                state = new char?[9];
-
-            var key = string.Join(',', state.Select(s => s ?? ' '));
-            if (ValueCache.TryGetValue(key, out var cachedValue))
-                return cachedValue;
-
-            var w = Winner(state);
-            if (w == 'x')
-                return ((1, (int?)null), (1, (int?)null));
-            if (w == 'o')
-                return ((0, (int?)null), (0, (int?)null));
-
-            var cells = AvailableCells(state);
-            if (!cells.Any())
-                return ((0.5, (int?)null), (0.5, (int?)null));
-
-            var f = new List<(double, double)>();
-            var g = new List<(double, double)>();
-            foreach (var cell in cells)
+            lock(__lockObj)
             {
-                double success = (double)squares[cell].GoodChances / 20;
-                double neutral = (double)squares[cell].NeutralChances / 20;
-                double failure = (double)squares[cell].BadChances / 20;
-                var s1 = Apply(state, cell, 'x');
-                var ((v1, _), (vp1, _)) = Value(s1);
-                var s2 = Apply(state, cell, 'o');
-                var ((v2, _), (vp2, _)) = Value(s2);
-                double x_c = success * vp1 + failure * vp2;
-                double xp_c = success * v2 + failure * v1;
-                f.Add((neutral, x_c));
-                g.Add((neutral, xp_c));
-            }
+                if (state == null)
+                    state = new char?[9];
 
-            var sol = HullIntersection(f, g);
-            var (v, i) = sol[0];
-            var (vp, ip) = sol[1];
-            var result = ((v, cells[i]), (vp, cells[ip]));
-            ValueCache[key] = result;
-            return result;
+                var key = string.Join(',', state.Select(s => s ?? ' '));
+                if (ValueCache.TryGetValue(key, out var cachedValue))
+                    return cachedValue;
+
+                var w = Winner(state);
+                if (w == 'x')
+                    return ((1, (int?)null), (1, (int?)null));
+                if (w == 'o')
+                    return ((0, (int?)null), (0, (int?)null));
+
+                var cells = AvailableCells(state);
+                if (!cells.Any())
+                    return ((0.5, (int?)null), (0.5, (int?)null));
+
+                var f = new List<(double, double)>();
+                var g = new List<(double, double)>();
+                foreach (var cell in cells)
+                {
+                    double success = successes[cell];
+                    double neutral = neutrals[cell];
+                    double failure = failures[cell];
+                    var s1 = Apply(state, cell, 'x');
+                    var ((v1, _), (vp1, _)) = Value(s1);
+                    var s2 = Apply(state, cell, 'o');
+                    var ((v2, _), (vp2, _)) = Value(s2);
+                    double x_c = success * vp1 + failure * vp2;
+                    double xp_c = success * v2 + failure * v1;
+                    f.Add((neutral, x_c));
+                    g.Add((neutral, xp_c));
+                }
+
+                var sol = HullIntersection(f, g);
+                var (v, i) = sol[0];
+                var (vp, ip) = sol[1];
+                var result = ((v, cells[i]), (vp, cells[ip]));
+                ValueCache[key] = result;
+                return result;
+            }
         }
 
         public void UpdateBoardWinChances(bool currentlyX)
@@ -136,7 +155,7 @@ namespace PTTT
                 double neutralChance = (double)squares[cell].NeutralChances / 20;
                 double badChance = (double)squares[cell].BadChances / 20;
 
-                var combinedVal = 
+                var combinedVal =
                     (float)((goodChance * opponentGoodVal) + (neutralChance * opponentNeutralVal) + (badChance * opponentBadVal));
                 // Val represents X's chance to win, so we must invert it if O is playing
                 if (!currentlyX) { combinedVal = 1 - combinedVal; }

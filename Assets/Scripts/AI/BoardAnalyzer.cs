@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Unity.Profiling;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -14,7 +15,6 @@ namespace PTTT
         private Dictionary<GameSquare, List<BoardWinSequence>> sequencesForSquare = new();
 
         private OptimalSolver solver;
-
 
         private int Idx(int row, int col) => row * 3 + col;
 
@@ -82,6 +82,15 @@ namespace PTTT
                 seq.Reset();
             }
             solver.Reset();
+            solver.LoadChances();
+        }
+
+        public void PreCacheOptimalSolver()
+        {
+            Task.Run(() =>
+            {
+                solver.Value();
+            });
         }
 
 #if SIMMODE

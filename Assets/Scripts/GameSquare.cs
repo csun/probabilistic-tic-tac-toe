@@ -93,7 +93,7 @@ namespace PTTT
         {
             if (shouldShowWins)
             {
-                WinsText.text = $"{(WinChance * 100).ToString("0")}% strength";
+                WinsText.text = $"{(WinChance * 100).ToString("0")}% win rate";
             }
 
             base.Refresh();

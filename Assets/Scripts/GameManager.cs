@@ -44,6 +44,8 @@ namespace PTTT
         private SquareContents lastRollResult;
         private BoardAnalyzer analyzer;
 
+        private bool shouldCacheOptimal => IsOptimalDifficulty || ShowWinProbabilities;
+
 // Define SIMMODE to have the cpu play against completely random moves
 #if SIMMODE
         private bool shouldResetNextTurn;
@@ -91,6 +93,12 @@ namespace PTTT
             ShowWinProbabilities = showWinProbabilities;
 
             OScore.HeaderText.text = singleplayer ? "CPU - O" : "Player - O";
+
+            if (showWinProbabilities || optimalDifficulty)
+            {
+                // This starts the board state calculations in the background so that we can avoid stutters during user interaction
+                analyzer.PreCacheOptimalSolver();
+            }
 
             if (shouldReset)
             {
@@ -141,6 +149,7 @@ namespace PTTT
             }
 
             analyzer.Reset();
+            analyzer.PreCacheOptimalSolver();
 
             SetCurrentPlayer(xStartNextGame);
             xStartNextGame = !xStartNextGame;

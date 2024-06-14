@@ -63,6 +63,8 @@ namespace PTTT
                 yield return null;
                 animProgress += Time.unscaledDeltaTime;
             }
+
+            callback();
         }
     }
 }
