@@ -243,6 +243,10 @@ namespace PTTT
         {
             CurrentlyX = playerX;
 
+            if (ShowWinProbabilities)
+            {
+                analyzer.UpdateBoardWinChances(CurrentlyX);
+            }
             if (!CurrentlyX && IsSingleplayer)
             {
                 DoCPUMove();

@@ -97,6 +97,11 @@ namespace PTTT
         }
 #endif
 
+        public void UpdateBoardWinChances(bool currentlyX)
+        {
+            solver.UpdateBoardWinChances(currentlyX);
+        }
+
         public GameSquare BestMoveForO(bool optimal=true)
         {
             ProfilerMarker profiler = new ProfilerMarker("PTTT.BestMoveForO");

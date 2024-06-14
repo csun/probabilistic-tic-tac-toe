@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine.Profiling;
 
+// See https://louisabraham.github.io/articles/probabilistic-tic-tac-toe for an explanation of this algorithm
+
 namespace PTTT
 {
     public class OptimalSolver
@@ -112,7 +114,46 @@ namespace PTTT
             return result;
         }
 
+        public void UpdateBoardWinChances(bool currentlyX)
+        {
+            var state = StateFromBoard();
+            var cells = AvailableCells(state);
+
+            foreach (var cell in cells)
+            {
+                ((var currentXVal, _), (var currentOVal, _)) = Value(state);
+                var opponentNeutralVal = currentlyX ? currentOVal : currentXVal;
+
+                var goodState = Apply(state, cell, currentlyX ? 'x' : 'o');
+                ((var goodXVal, _), (var goodOVal, _)) = Value(goodState);
+                var opponentGoodVal = currentlyX ? goodOVal : goodXVal;
+
+                var badState = Apply(state, cell, currentlyX ? 'o' : 'x');
+                ((var badXVal, _), (var badOVal, _)) = Value(badState);
+                var opponentBadVal = currentlyX ? badOVal : badXVal;
+
+                double goodChance = (double)squares[cell].GoodChances / 20;
+                double neutralChance = (double)squares[cell].NeutralChances / 20;
+                double badChance = (double)squares[cell].BadChances / 20;
+
+                var combinedVal = 
+                    (float)((goodChance * opponentGoodVal) + (neutralChance * opponentNeutralVal) + (badChance * opponentBadVal));
+                // Val represents X's chance to win, so we must invert it if O is playing
+                if (!currentlyX) { combinedVal = 1 - combinedVal; }
+
+                squares[cell].WinChance = combinedVal;
+            }
+        }
+
         public GameSquare BestMoveForO()
+        {
+            (_, (double _, int? bestMove)) = Value(StateFromBoard());
+            if (bestMove == null)
+                throw new Exception("Best move is null");
+            return squares[(int)bestMove];
+        }
+
+        private char?[] StateFromBoard()
         {
             char?[] state = new char?[9];
             for (int i = 0; i < 9; i++)
@@ -125,10 +166,7 @@ namespace PTTT
                     _ => throw new Exception("Invalid square content")
                 };
             }
-            (_, (double _, int? bestMove)) = Value(state);
-            if (bestMove == null)
-                throw new Exception("Best move is null");
-            return squares[(int)bestMove];
+            return state;
         }
 
         public void Reset()

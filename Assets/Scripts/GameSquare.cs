@@ -16,6 +16,8 @@ namespace PTTT
         public int BadChances;
         public int NeutralChances => 20 - (GoodChances + BadChances);
 
+        public float WinChance;
+
         public Color StatUnselectedColor;
         public Color StatSelectedColor;
         public Color BackgroundUnselectedColor;
@@ -27,6 +29,7 @@ namespace PTTT
         public StatBar GoodBar;
         public StatBar NeutralBar;
         public StatBar BadBar;
+        public TMPro.TMP_Text WinsText;
         public TMPro.TMP_Text PlacedText;
 
         protected override bool ignoreMouseHighlights => CurrentContents != SquareContents.Empty || Manager.CurrentState != GameManager.State.Selecting;
@@ -38,6 +41,7 @@ namespace PTTT
             BadBar.gameObject.SetActive(true);
             NeutralBar.gameObject.SetActive(true);
             PlacedText.gameObject.SetActive(false);
+            WinsText.gameObject.SetActive(Manager.ShowWinProbabilities);
 
             GoodBar.UpdateProbability(GoodChances / 20.0f);
             BadBar.UpdateProbability(BadChances / 20.0f);
@@ -54,6 +58,7 @@ namespace PTTT
                 GoodBar.gameObject.SetActive(false);
                 BadBar.gameObject.SetActive(false);
                 NeutralBar.gameObject.SetActive(false);
+                WinsText.gameObject.SetActive(false);
             }
 
 #if SIMMODE
@@ -80,6 +85,18 @@ namespace PTTT
         {
             if (CurrentContents != SquareContents.Empty || Manager.CurrentState != GameManager.State.Selecting) { return; }
             Manager.OnSquareSelect(this);
+        }
+
+        public override void Refresh()
+        {
+            var shouldShowWins = Manager.ShowWinProbabilities && CurrentContents == SquareContents.Empty;
+            WinsText.gameObject.SetActive(shouldShowWins);
+            if (shouldShowWins)
+            {
+                WinsText.text = $"{WinChance.ToString("0.00")}";
+            }
+
+            base.Refresh();
         }
 
         public override void Highlight()
